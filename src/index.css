@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #f8fafc;
+  --foreground: #1e293b;
+  --card: #ffffff;
+  --card-foreground: #1e293b;
+  --border: #e2e8f0;
+}
+
+.dark {
+  --background: #1e293b;
+  --foreground: #f8fafc;
+  --card: #334155;
+  --card-foreground: #f8fafc;
+  --border: #475569;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+.bg-card {
+  background-color: var(--card);
+  color: var(--card-foreground);
+  border: 1px solid var(--border);
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+}
+
+.border-border {
+  border-color: var(--border);
+}
+
+.text-foreground {
+  color: var(--foreground);
+}
+
+.text-muted-foreground {
+  color: var(--foreground);
+  opacity: 0.7;
+}
+
+.hover\:text-foreground:hover {
+  color: var(--foreground);
+}
