@@ -40,9 +40,7 @@ export default function Home() {
             to="/"
             className="font-bold text-xl flex items-center gap-2 text-foreground"
           >
-            <div className="h-8 w-8 bg-foreground text-background rounded flex items-center justify-center">
-              ZL
-            </div>
+            <img src="/zaplink.png" alt="ZapLink Logo" className="h-8 w-auto" />
             <span>ZapLink</span>
           </Link>
           <nav className="hidden md:flex items-center gap-6">
