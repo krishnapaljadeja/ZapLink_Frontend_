@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
-import { ArrowLeft, Upload, Loader2 } from "lucide-react";
+import { ArrowLeft, Upload, Loader2, X } from "lucide-react";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Checkbox } from "./ui/checkbox";
@@ -146,6 +146,16 @@ export default function UploadPage() {
     }
     setUploadedFile(file);
     setQrName(qrName ? qrName : file.name);
+    toast.success(`File "${file.name}" selected successfully!`);
+  };
+
+  const handleRemoveFile = () => {
+    setUploadedFile(null);
+    const fileInput = document.getElementById("file") as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = "";
+    }
+    toast.info("File removed");
   };
 
   const handleQrNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -278,39 +288,55 @@ export default function UploadPage() {
           {/* File Upload */}
           {type === "url" ? (
             <div className="space-y-2">
-              <Label className="text-base font-medium text-foreground">
-                Paste your URL
-              </Label>
+              <Label htmlFor="url">Enter URL</Label>
               <Input
-                type="text"
-                placeholder="Enter a valid http:// or https:// link"
+                id="url"
+                type="url"
                 value={urlValue}
                 onChange={(e) => setUrlValue(e.target.value)}
-                className="text-base rounded-md border border-border focus:border-blue-500 focus:ring focus:ring-blue-200 bg-background text-foreground"
+                placeholder="https://example.com"
+                className="w-full"
               />
+              <p className="text-sm text-muted-foreground">
+                {TYPE_MESSAGES[type]}
+              </p>
             </div>
           ) : (
-            <div className="space-y-2">
-              <Label className="text-base font-medium text-foreground">
-                Upload File
-              </Label>
-              <div className="relative border-2 border-dashed rounded-xl p-4 text-center transition-colors border-border hover:border-foreground/50">
-                <input
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="file">Upload File</Label>
+                <Input
+                  id="file"
                   type="file"
                   onChange={handleFileChange}
-                  className="hidden"
-                  id="file-upload"
-                  accept={TYPE_EXTENSIONS[type]?.join(",") || "*"}
+                  accept={TYPE_EXTENSIONS[type].join(",")}
+                  className="cursor-pointer"
                 />
-                <label htmlFor="file-upload" className="cursor-pointer block">
-                  <div className="flex flex-col items-center gap-2">
-                    <Upload className="h-8 w-8 text-muted-foreground" />
-                    <div className="text-sm text-muted-foreground">
-                      {TYPE_MESSAGES[type] || "Supports: various file types"}
-                    </div>
-                  </div>
-                </label>
+                <p className="text-sm text-muted-foreground">
+                  {TYPE_MESSAGES[type]}
+                </p>
               </div>
+
+              {uploadedFile && (
+                <div className="p-4 border rounded-lg bg-card">
+                  <div className="flex items-center gap-3">
+                    <Upload className="h-5 w-5 text-primary" />
+                    <div className="flex-1">
+                      <p className="font-medium">{uploadedFile.name}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {(uploadedFile.size / 1024).toFixed(2)} KB
+                      </p>
+                    </div>
+                    <button
+                      onClick={handleRemoveFile}
+                      className="p-1 hover:bg-muted rounded-full transition-colors"
+                      title="Remove file"
+                    >
+                      <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 

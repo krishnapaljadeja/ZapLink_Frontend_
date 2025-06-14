@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowLeft, Mail, Github } from "lucide-react";
+import { ArrowLeft, Mail, Github, Linkedin } from "lucide-react";
 import { Button } from "./ui/button";
 import { ThemeToggle } from "./ThemeToggle";
 
@@ -48,18 +48,20 @@ export default function AboutUs() {
                 </p>
                 <div className="flex justify-center gap-4 pt-2">
                   <a
-                    href="mailto:jadejakrishnapal.ce@gmail.com"
-                    className="text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    <Mail className="h-5 w-5" />
-                  </a>
-                  <a
-                    href="https://github.com/yourusername"
+                    href="https://github.com/krishnapaljadeja"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-muted-foreground hover:text-foreground transition-colors"
                   >
                     <Github className="h-5 w-5" />
+                  </a>
+                  <a
+                    href="http://linkedin.com/in/krishnapal-jadeja-39a4ab1b7"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    <Linkedin className="h-5 w-5" />
                   </a>
                 </div>
               </div>
@@ -81,18 +83,20 @@ export default function AboutUs() {
                 </p>
                 <div className="flex justify-center gap-4 pt-2">
                   <a
-                    href="mailto:vasukamani.ce@gmail.com"
-                    className="text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    <Mail className="h-5 w-5" />
-                  </a>
-                  <a
-                    href="https://github.com/yourusername"
+                    href="https://github.com/vasu-CE"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-muted-foreground hover:text-foreground transition-colors"
                   >
                     <Github className="h-5 w-5" />
+                  </a>
+                  <a
+                    href="http://linkedin.com/in/vasu-kamani-11a07b277/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    <Linkedin className="h-5 w-5" />
                   </a>
                 </div>
               </div>

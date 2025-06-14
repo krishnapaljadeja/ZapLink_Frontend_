@@ -52,7 +52,9 @@ export default function ViewZap() {
       setPasswordRequired(false);
       setPasswordError(null);
       try {
-        await axios.get(`/api/zaps/${shortId}`);
+        await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/zaps/${shortId}`
+        );
         // If successful, the backend will redirect or serve the file.
       } catch (err: any) {
         if (
@@ -103,9 +105,12 @@ export default function ViewZap() {
     setVerifying(true);
     setPasswordError(null);
     try {
-      await axios.get(`/api/zaps/${shortId}`, {
-        params: { password },
-      });
+      await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/zaps/${shortId}`,
+        {
+          params: { password },
+        }
+      );
       // If successful, the backend will redirect or serve the file.
       // Optionally, you can show a spinner or "Redirecting..." message here.
       setPasswordError(null);

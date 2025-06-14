@@ -8,7 +8,7 @@ import { Toaster } from "sonner";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <ThemeProvider defaultTheme="light" storageKey="zaplink-theme">
+    <ThemeProvider defaultTheme="dark" storageKey="zaplink-theme">
       <BrowserRouter>
         <App />
         <Toaster richColors />
