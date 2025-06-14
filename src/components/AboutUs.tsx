@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowLeft, Mail, Github, Linkedin } from "lucide-react";
+import { ArrowLeft, Github, Linkedin } from "lucide-react";
 import { Button } from "./ui/button";
 import { ThemeToggle } from "./ThemeToggle";
 
