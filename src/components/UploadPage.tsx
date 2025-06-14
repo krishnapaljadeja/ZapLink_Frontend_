@@ -191,6 +191,16 @@ export default function UploadPage() {
       if (selfDestruct && destructViews && viewsValue.trim()) {
         formData.append("viewLimit", viewsValue);
       }
+      if (selfDestruct && destructTime && timeValue.trim()) {
+        const expirationTime = new Date();
+        const hours = parseInt(timeValue);
+        if (!isNaN(hours)) {
+          expirationTime.setTime(
+            expirationTime.getTime() + hours * 60 * 60 * 1000
+          );
+          formData.append("expiresAt", expirationTime.toISOString());
+        }
+      }
       // ...rest of your submit logic for URL...
       return;
     }
@@ -209,6 +219,16 @@ export default function UploadPage() {
     }
     if (selfDestruct && destructViews && viewsValue.trim()) {
       formData.append("viewLimit", viewsValue);
+    }
+    if (selfDestruct && destructTime && timeValue.trim()) {
+      const expirationTime = new Date();
+      const hours = parseInt(timeValue);
+      if (!isNaN(hours)) {
+        expirationTime.setTime(
+          expirationTime.getTime() + hours * 60 * 60 * 1000
+        );
+        formData.append("expiresAt", expirationTime.toISOString());
+      }
     }
 
     try {
