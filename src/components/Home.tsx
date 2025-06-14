@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   FileText,
   ImageIcon,
@@ -18,8 +17,8 @@ import { cn } from "../lib/utils";
 import { useTheme } from "../lib/theme-provider";
 
 export default function Home() {
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const { theme, setTheme } = useTheme();
+  const navigate = useNavigate();
 
   const contentTypes = [
     { id: "pdf", label: "PDF", icon: FileText },
@@ -31,6 +30,10 @@ export default function Home() {
     { id: "docx", label: "DOCX", icon: DocxIcon },
     { id: "pptx", label: "PPTX", icon: Presentation },
   ];
+
+  const handleOptionClick = (typeId: string) => {
+    navigate("/upload", { state: { type: typeId } });
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -77,47 +80,23 @@ export default function Home() {
           What do you want to create a QR code for?
         </h1>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-10">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {contentTypes.map((type) => (
             <button
               key={type.id}
-              onClick={() => setSelectedOption(type.id)}
+              onClick={() => handleOptionClick(type.id)}
               className={cn(
                 "aspect-square flex flex-col items-center justify-center gap-3 p-4 rounded-lg border transition-all",
                 "hover:border-primary hover:shadow-sm",
-                selectedOption === type.id
-                  ? "border-primary bg-primary/5 shadow-sm"
-                  : "border-border bg-card"
+                "border-border bg-card"
               )}
             >
-              <type.icon
-                className={cn(
-                  "h-8 w-8 transition-colors",
-                  selectedOption === type.id
-                    ? "text-primary"
-                    : "text-muted-foreground"
-                )}
-              />
-              <span
-                className={cn(
-                  "text-sm font-medium",
-                  selectedOption === type.id
-                    ? "text-primary"
-                    : "text-foreground"
-                )}
-              >
+              <type.icon className="h-8 w-8 text-muted-foreground transition-colors" />
+              <span className="text-sm font-medium text-foreground">
                 {type.label}
               </span>
             </button>
           ))}
-        </div>
-
-        <div className="flex justify-center">
-          <Button size="lg" disabled={!selectedOption} className="px-8" asChild>
-            <Link to="/upload" state={{ type: selectedOption }}>
-              Continue <span className="ml-2">➔</span>
-            </Link>
-          </Button>
         </div>
       </main>
     </div>
