@@ -52,38 +52,21 @@ export default function ViewZap() {
       setPasswordRequired(false);
       setPasswordError(null);
       try {
-        await axios.get(
+        const response = await axios.get(
           `${import.meta.env.VITE_BACKEND_URL}/api/zaps/${shortId}`
         );
         // If successful, the backend will redirect or serve the file.
+        if (response.data) {
+          window.location.href = response.data.url;
+        }
       } catch (err: any) {
-        if (
-          err.response &&
-          err.response.status === 401 &&
-          err.response.data?.message
-            ?.toLowerCase()
-            .includes("password required")
-        ) {
-          setPasswordRequired(true);
-        } else if (
-          err.response &&
-          err.response.status === 401 &&
-          err.response.data?.message
-            ?.toLowerCase()
-            .includes("incorrect password")
-        ) {
-          setPasswordRequired(true);
-          setPasswordError("Incorrect password. Please try again.");
-        } else if (
-          err.response &&
-          (err.response.status === 410 || err.response.status === 403)
-        ) {
-          setError("View limit exceeded. This file is no longer accessible.");
-          setErrorType("viewlimit");
+        if (err.response?.status === 410) {
+          setError("This link has expired. The file is no longer available.");
+          setErrorType("expired");
           toast.error(
-            "View limit exceeded. This file is no longer accessible."
+            "This link has expired. The file is no longer available."
           );
-        } else if (err.response && err.response.status === 404) {
+        } else if (err.response?.status === 404) {
           setError("This link does not exist or has expired.");
           setErrorType("notfound");
           toast.error("This link does not exist or has expired.");
@@ -97,7 +80,6 @@ export default function ViewZap() {
       }
     };
     fetchZap();
-    // eslint-disable-next-line
   }, [shortId, location.search]);
 
   const handlePasswordSubmit = async (e: React.FormEvent) => {
