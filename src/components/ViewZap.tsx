@@ -13,6 +13,8 @@ function getErrorMessage(errorParam: string | null) {
     return "This link has expired. The file is no longer available.";
   if (errorParam === "notfound")
     return "This link does not exist or has expired.";
+  if (errorParam === "incorrect_password")
+    return "Incorrect password. Please try again.";
   return "An unexpected error occurred. Please try again later.";
 }
 
@@ -20,6 +22,7 @@ function getErrorHeading(errorParam: string | null) {
   if (errorParam === "expired") return "Link Expired";
   if (errorParam === "viewlimit") return "View Limit Exceeded";
   if (errorParam === "notfound") return "Not Found";
+  if (errorParam === "incorrect_password") return "Incorrect Password";
   return "Access Denied";
 }
 
@@ -39,6 +42,12 @@ export default function ViewZap() {
     const errorParam = params.get("error");
     const errorMsg = getErrorMessage(errorParam);
     if (errorMsg) {
+      if (errorParam === "incorrect_password") {
+        setPasswordRequired(true);
+        setPasswordError(errorMsg);
+        setLoading(false);
+        return;
+      }
       setError(errorMsg);
       setErrorType(errorParam);
       toast.error(errorMsg);
@@ -60,7 +69,27 @@ export default function ViewZap() {
           window.location.href = response.data.url;
         }
       } catch (err: any) {
-        if (err.response?.status === 410) {
+        if (err.response?.status === 401) {
+          // Check if it's a password required error
+          if (
+            err.response.data?.message
+              ?.toLowerCase()
+              .includes("password required")
+          ) {
+            setPasswordRequired(true);
+            setLoading(false);
+            return;
+          } else if (
+            err.response.data?.message
+              ?.toLowerCase()
+              .includes("incorrect password")
+          ) {
+            setPasswordError("Incorrect password. Please try again.");
+            setPasswordRequired(true);
+            setLoading(false);
+            return;
+          }
+        } else if (err.response?.status === 410) {
           setError("This link has expired. The file is no longer available.");
           setErrorType("expired");
           toast.error(
@@ -87,19 +116,133 @@ export default function ViewZap() {
     setVerifying(true);
     setPasswordError(null);
     try {
-      await axios.get(
+      const response = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/api/zaps/${shortId}`,
         {
           params: { password },
+          headers: {
+            Accept: "application/json",
+          },
         }
       );
-      // If successful, the backend will redirect or serve the file.
-      // Optionally, you can show a spinner or "Redirecting..." message here.
-      setPasswordError(null);
-      setPasswordRequired(false);
-      setVerifying(false);
-      setLoading(true);
-      window.location.reload(); // Try to reload to trigger backend redirect
+
+      // Handle successful response
+      if (response.data) {
+        const { type, url, content, data, name } = response.data;
+
+        if (type === "redirect" || type === "file") {
+          // Redirect to the URL
+          window.location.href = url;
+        } else if (type === "text" || type === "document") {
+          // Escape HTML entities for security
+          const escapeHtml = (unsafe: string) =>
+            unsafe
+              .replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
+          const escapedContent = escapeHtml(content);
+          const escapedName = escapeHtml(name || "Untitled");
+          // Use the backend's dark theme template
+          const html = `
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>${escapedName}</title>
+                <style>
+                    body {
+                        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                        line-height: 1.6;
+                        color: #e5e7eb;
+                        max-width: 800px;
+                        margin: 0 auto;
+                        padding: 20px;
+                        background-color: #111827;
+                        min-height: 100vh;
+                    }
+                    .container {
+                        background: #1f2937;
+                        padding: 30px;
+                        border-radius: 12px;
+                        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+                        border: 1px solid #374151;
+                    }
+                    h1 {
+                        color: #f9fafb;
+                        margin-bottom: 20px;
+                        border-bottom: 2px solid #3b82f6;
+                        padding-bottom: 10px;
+                        font-size: 2rem;
+                        font-weight: 600;
+                    }
+                    .content {
+                        white-space: pre-wrap;
+                        word-wrap: break-word;
+                        font-size: 16px;
+                        color: #d1d5db;
+                        line-height: 1.7;
+                    }
+                    .footer {
+                        margin-top: 30px;
+                        padding-top: 20px;
+                        border-top: 1px solid #374151;
+                        text-align: center;
+                        color: #9ca3af;
+                        font-size: 14px;
+                    }
+                    @media (max-width: 768px) {
+                        body {
+                            padding: 15px;
+                        }
+                        .container {
+                            padding: 20px;
+                        }
+                        h1 {
+                            font-size: 1.5rem;
+                        }
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h1>${escapedName}</h1>
+                    <div class="content">${escapedContent}</div>
+                    <div class="footer">
+                        Powered by ZapLink
+                    </div>
+                </div>
+            </body>
+            </html>
+          `;
+          const newWindow = window.open("", "_blank");
+          if (newWindow) {
+            newWindow.document.write(html);
+            newWindow.document.close();
+          }
+        } else if (type === "image") {
+          // Display image
+          const newWindow = window.open("", "_blank");
+          if (newWindow) {
+            newWindow.document.write(`
+              <!DOCTYPE html>
+              <html>
+              <head>
+                <title>${name || "Image"}</title>
+              </head>
+              <body style="margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh;">
+                <img src="${data}" alt="${
+              name || "Image"
+            }" style="max-width: 100%; max-height: 100vh;">
+              </body>
+              </html>
+            `);
+            newWindow.document.close();
+          }
+        }
+      }
     } catch (err: any) {
       if (
         err.response &&
