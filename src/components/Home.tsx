@@ -27,8 +27,8 @@ export default function Home() {
     { id: "audio", label: "Audio", icon: Music },
     { id: "url", label: "URL", icon: LinkIcon },
     { id: "text", label: "Text", icon: Type },
-    { id: "docx", label: "DOCX", icon: DocxIcon },
-    { id: "pptx", label: "PPTX", icon: Presentation },
+    { id: "document", label: "Document", icon: DocxIcon },
+    { id: "presentation", label: "Presentation", icon: Presentation },
   ];
 
   const handleOptionClick = (typeId: string) => {

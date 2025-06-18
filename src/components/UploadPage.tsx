@@ -17,7 +17,8 @@ type FileType =
   | "archive"
   | "audio"
   | "video"
-  | "url";
+  | "url"
+  | "text";
 
 const TYPE_MESSAGES: Record<FileType, string> = {
   image: "Supports: .jpg, .jpeg, .png, .webp",
@@ -29,6 +30,7 @@ const TYPE_MESSAGES: Record<FileType, string> = {
   audio: "Supports: .mp3, .wav, .ogg, .m4a",
   video: "Supports: .mp4, .avi, .mov, .wmv, .flv",
   url: "Enter a valid http:// or https:// link",
+  text: "Enter text content",
 };
 
 const TYPE_EXTENSIONS: Record<FileType, string[]> = {
@@ -41,6 +43,7 @@ const TYPE_EXTENSIONS: Record<FileType, string[]> = {
   audio: [".mp3", ".wav", ".ogg", ".m4a"],
   video: [".mp4", ".avi", ".mov", ".wmv", ".flv"],
   url: [],
+  text: [],
 };
 
 export default function UploadPage() {
@@ -69,6 +72,7 @@ export default function UploadPage() {
   const [loading, setLoading] = useState(false);
   const [type] = useState<FileType>(initialType);
   const [urlValue, setUrlValue] = useState("");
+  const [textValue, setTextValue] = useState("");
 
   // Persist state to sessionStorage
   useEffect(() => {
@@ -130,7 +134,13 @@ export default function UploadPage() {
   };
 
   const validateFileType = (file: File) => {
-    if (type === "url") return true;
+    if (
+      type === "url" ||
+      type === "text" ||
+      type === "document" ||
+      type === "presentation"
+    )
+      return true;
     const ext = file.name.toLowerCase().slice(file.name.lastIndexOf("."));
     const allowed = TYPE_EXTENSIONS[type] || [];
     return allowed.length === 0 || allowed.includes(ext);
@@ -139,7 +149,16 @@ export default function UploadPage() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (!validateFileType(file)) {
+    if (type === "text") {
+      toast.error(
+        "Text type does not require file upload. Please use the text input below."
+      );
+      e.target.value = "";
+      return;
+    }
+    if (type === "document" || type === "presentation") {
+      // Allow these types to proceed with file upload
+    } else if (!validateFileType(file)) {
       toast.error(TYPE_MESSAGES[type] || "Invalid file type.");
       e.target.value = "";
       return;
@@ -161,14 +180,15 @@ export default function UploadPage() {
   const handleQrNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setQrName(value);
-    if (type === "url" && value && !/^https?:\/\//.test(value)) {
-      toast.error("Please enter a valid http:// or https:// link");
-    }
   };
 
   const canGenerate =
     qrName.trim() &&
-    (type === "url" ? urlValue.trim() : uploadedFile) &&
+    (type === "url"
+      ? urlValue.trim()
+      : type === "text"
+      ? textValue.trim()
+      : uploadedFile) &&
     (!passwordProtect || password.trim()) &&
     (!selfDestruct ||
       (destructViews && viewsValue.trim()) ||
@@ -185,9 +205,12 @@ export default function UploadPage() {
         return;
       }
       const formData = new FormData();
-      formData.append("url", urlValue);
+      formData.append("originalUrl", urlValue);
       formData.append("name", qrName);
       formData.append("type", "URL");
+      if (passwordProtect && password.trim()) {
+        formData.append("password", password);
+      }
       if (selfDestruct && destructViews && viewsValue.trim()) {
         formData.append("viewLimit", viewsValue);
       }
@@ -201,7 +224,90 @@ export default function UploadPage() {
           formData.append("expiresAt", expirationTime.toISOString());
         }
       }
-      // ...rest of your submit logic for URL...
+
+      try {
+        setLoading(true);
+        const response = await axios.post(
+          `${import.meta.env.VITE_BACKEND_URL}/api/zaps/upload`,
+          formData
+        );
+        const { data } = response.data;
+
+        navigate("/customize", {
+          state: {
+            zapId: data.zapId,
+            shortUrl: data.shortUrl,
+            qrCode: data.qrCode,
+            type: data.type.toUpperCase(),
+            name: data.name,
+          },
+        });
+      } catch (error: unknown) {
+        const err = error as AxiosError<{ message: string }>;
+        toast.error(
+          `Upload failed: ${err.response?.data?.message || err.message}`
+        );
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
+
+    if (type === "text") {
+      if (!textValue.trim()) {
+        toast.error("Please enter some text content");
+        return;
+      }
+      if (!qrName) {
+        toast.error("Please enter a name for your QR code");
+        return;
+      }
+      const formData = new FormData();
+      formData.append("textContent", textValue);
+      formData.append("name", qrName);
+      formData.append("type", "TEXT");
+      if (passwordProtect && password.trim()) {
+        formData.append("password", password);
+      }
+      if (selfDestruct && destructViews && viewsValue.trim()) {
+        formData.append("viewLimit", viewsValue);
+      }
+      if (selfDestruct && destructTime && timeValue.trim()) {
+        const expirationTime = new Date();
+        const hours = parseInt(timeValue);
+        if (!isNaN(hours)) {
+          expirationTime.setTime(
+            expirationTime.getTime() + hours * 60 * 60 * 1000
+          );
+          formData.append("expiresAt", expirationTime.toISOString());
+        }
+      }
+
+      try {
+        setLoading(true);
+        const response = await axios.post(
+          `${import.meta.env.VITE_BACKEND_URL}/api/zaps/upload`,
+          formData
+        );
+        const { data } = response.data;
+
+        navigate("/customize", {
+          state: {
+            zapId: data.zapId,
+            shortUrl: data.shortUrl,
+            qrCode: data.qrCode,
+            type: data.type.toUpperCase(),
+            name: data.name,
+          },
+        });
+      } catch (error: unknown) {
+        const err = error as AxiosError<{ message: string }>;
+        toast.error(
+          `Upload failed: ${err.response?.data?.message || err.message}`
+        );
+      } finally {
+        setLoading(false);
+      }
       return;
     }
 
@@ -320,6 +426,27 @@ export default function UploadPage() {
               <p className="text-sm text-muted-foreground">
                 {TYPE_MESSAGES[type]}
               </p>
+            </div>
+          ) : type === "text" ? (
+            <div className="space-y-2">
+              <Label htmlFor="text">Enter Text</Label>
+              <textarea
+                id="text"
+                value={textValue}
+                onChange={(e) => setTextValue(e.target.value)}
+                placeholder="Enter your text content here..."
+                className="w-full min-h-[120px] p-3 text-base rounded-md border border-border focus:border-blue-500 focus:ring focus:ring-blue-200 bg-background text-foreground resize-vertical"
+                rows={5}
+                maxLength={10000}
+              />
+              <div className="flex justify-between items-center">
+                <p className="text-sm text-muted-foreground">
+                  {TYPE_MESSAGES[type]}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  {textValue.length}/10,000 characters
+                </p>
+              </div>
             </div>
           ) : (
             <div className="space-y-4">
