@@ -368,42 +368,42 @@ export default function UploadPage() {
     <div className="min-h-screen bg-background page-enter">
       {/* Header */}
       <header className="glass-nav sticky top-0 z-50">
-        <div className="container mx-auto px-6 py-4 flex items-center gap-4">
+        <div className="container mx-auto px-4 sm:px-6 py-4 flex items-center gap-4">
           <Link
             to="/"
             className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-all duration-200 hover:scale-105"
           >
             <ArrowLeft className="h-5 w-5" />
-            Back
+            <span className="hidden sm:inline">Back</span>
           </Link>
           <div className="flex-1 text-center">
-            <h1 className="text-2xl font-semibold bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
+            <h1 className="text-lg sm:text-2xl font-semibold bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
               Upload Your Content
             </h1>
           </div>
         </div>
       </header>
 
-      <main className="container mx-auto px-6 py-12 max-w-3xl">
-        <div className="bg-card/50 backdrop-blur-sm rounded-3xl shadow-2xl p-10 space-y-10 border border-border/30 animate-fade-in-up">
+      <main className="container mx-auto px-4 sm:px-6 py-8 sm:py-12 max-w-3xl">
+        <div className="bg-card/50 backdrop-blur-sm rounded-3xl shadow-2xl p-6 sm:p-10 space-y-8 sm:space-y-10 border border-border/30 animate-fade-in-up">
           {/* Step Indicator */}
-          <div className="flex items-center justify-between mb-12">
-            <span className="text-sm text-primary font-semibold bg-primary/10 px-4 py-2 rounded-full">
+          <div className="flex items-center justify-between mb-8 sm:mb-12">
+            <span className="text-xs sm:text-sm text-primary font-semibold bg-primary/10 px-3 py-1 sm:px-4 sm:py-2 rounded-full">
               Step 2 of 3
             </span>
-            <div className="flex-1 mx-6 h-2 bg-muted/30 rounded-full overflow-hidden">
+            <div className="flex-1 mx-4 sm:mx-6 h-2 bg-muted/30 rounded-full overflow-hidden">
               <div className="progress-bar h-full w-2/3"></div>
             </div>
-            <span className="text-sm text-muted-foreground flex items-center gap-2">
+            <span className="text-xs sm:text-sm text-muted-foreground flex items-center gap-1 sm:gap-2">
               Customize
-              <Zap className="h-4 w-4" />
+              <Zap className="h-3 w-3 sm:h-4 sm:w-4" />
             </span>
           </div>
 
           {/* QR Code Name */}
-          <div className="space-y-4 animate-slide-in-left" style={{ animationDelay: '0.1s' }}>
-            <Label className="text-lg font-semibold text-foreground flex items-center gap-2">
-              <span className="w-3 h-3 bg-primary rounded-full"></span>
+          <div className="space-y-3 sm:space-y-4 animate-slide-in-left" style={{ animationDelay: '0.1s' }}>
+            <Label className="text-base sm:text-lg font-semibold text-foreground flex items-center gap-2">
+              <span className="w-2 h-2 sm:w-3 sm:h-3 bg-primary rounded-full"></span>
               Name your QR Code
             </Label>
             <Input
@@ -411,15 +411,15 @@ export default function UploadPage() {
               placeholder="Enter a memorable name..."
               value={qrName}
               onChange={handleQrNameChange}
-              className="input-focus text-base rounded-xl border-border/50 bg-background/50 backdrop-blur-sm h-14 px-6 font-medium text-lg"
+              className="input-focus text-base rounded-xl border-border/50 bg-background/50 backdrop-blur-sm h-12 sm:h-14 px-4 sm:px-6 font-medium sm:text-lg"
             />
           </div>
 
           {/* File Upload */}
           {type === "url" ? (
-            <div className="space-y-4 animate-slide-in-left" style={{ animationDelay: '0.2s' }}>
-              <Label htmlFor="url" className="text-lg font-semibold text-foreground flex items-center gap-2">
-                <span className="w-3 h-3 bg-blue-500 rounded-full"></span>
+            <div className="space-y-3 sm:space-y-4 animate-slide-in-left" style={{ animationDelay: '0.2s' }}>
+              <Label htmlFor="url" className="text-base sm:text-lg font-semibold text-foreground flex items-center gap-2">
+                <span className="w-2 h-2 sm:w-3 sm:h-3 bg-blue-500 rounded-full"></span>
                 Enter URL
               </Label>
               <Input
@@ -428,16 +428,16 @@ export default function UploadPage() {
                 value={urlValue}
                 onChange={(e) => setUrlValue(e.target.value)}
                 placeholder="https://example.com"
-                className="input-focus text-base rounded-xl border-border/50 bg-background/50 backdrop-blur-sm h-14 px-6 text-lg"
+                className="input-focus text-base rounded-xl border-border/50 bg-background/50 backdrop-blur-sm h-12 sm:h-14 px-4 sm:px-6 sm:text-lg"
               />
-              <p className="text-sm text-muted-foreground pl-6">
+              <p className="text-sm text-muted-foreground pl-4 sm:pl-6">
                 {TYPE_MESSAGES[type]}
               </p>
             </div>
           ) : type === "text" ? (
-            <div className="space-y-4 animate-slide-in-left" style={{ animationDelay: '0.2s' }}>
-              <Label htmlFor="text" className="text-lg font-semibold text-foreground flex items-center gap-2">
-                <span className="w-3 h-3 bg-yellow-500 rounded-full"></span>
+            <div className="space-y-3 sm:space-y-4 animate-slide-in-left" style={{ animationDelay: '0.2s' }}>
+              <Label htmlFor="text" className="text-base sm:text-lg font-semibold text-foreground flex items-center gap-2">
+                <span className="w-2 h-2 sm:w-3 sm:h-3 bg-yellow-500 rounded-full"></span>
                 Enter Text
               </Label>
               <textarea
@@ -445,7 +445,7 @@ export default function UploadPage() {
                 value={textValue}
                 onChange={(e) => setTextValue(e.target.value)}
                 placeholder="Enter your text content here..."
-                className="w-full min-h-[140px] p-6 text-base rounded-xl border border-border/50 bg-background/50 backdrop-blur-sm text-foreground resize-vertical transition-all duration-200 focus:border-primary/50 focus:ring-2 focus:ring-primary/10"
+                className="w-full min-h-[120px] sm:min-h-[140px] p-4 sm:p-6 text-base rounded-xl border border-border/50 bg-background/50 backdrop-blur-sm text-foreground resize-vertical transition-all duration-200 focus:border-primary/50 focus:ring-2 focus:ring-primary/10"
                 rows={6}
                 maxLength={10000}
               />
@@ -459,10 +459,10 @@ export default function UploadPage() {
               </div>
             </div>
           ) : (
-            <div className="space-y-6 animate-slide-in-left" style={{ animationDelay: '0.2s' }}>
-              <div className="space-y-4">
-                <Label htmlFor="file" className="text-lg font-semibold text-foreground flex items-center gap-2">
-                  <span className="w-3 h-3 bg-purple-500 rounded-full"></span>
+            <div className="space-y-4 sm:space-y-6 animate-slide-in-left" style={{ animationDelay: '0.2s' }}>
+              <div className="space-y-3 sm:space-y-4">
+                <Label htmlFor="file" className="text-base sm:text-lg font-semibold text-foreground flex items-center gap-2">
+                  <span className="w-2 h-2 sm:w-3 sm:h-3 bg-purple-500 rounded-full"></span>
                   Upload File
                 </Label>
                 <div className="relative">
@@ -471,32 +471,32 @@ export default function UploadPage() {
                     type="file"
                     onChange={handleFileChange}
                     accept={TYPE_EXTENSIONS[type].join(",")}
-                    className="cursor-pointer h-14 rounded-xl border-border/50 bg-background/50 backdrop-blur-sm file:mr-4 file:py-3 file:px-6 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90 transition-all duration-200"
+                    className="cursor-pointer h-12 sm:h-14 rounded-xl border-border/50 bg-background/50 backdrop-blur-sm file:mr-4 file:py-2 sm:file:py-3 file:px-4 sm:file:px-6 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90 transition-all duration-200"
                   />
                 </div>
-                <p className="text-sm text-muted-foreground pl-6">
+                <p className="text-sm text-muted-foreground pl-4 sm:pl-6">
                   {TYPE_MESSAGES[type]}
                 </p>
               </div>
 
               {uploadedFile && (
-                <div className="p-6 border border-border/50 rounded-xl bg-card/30 backdrop-blur-sm animate-scale-in">
-                  <div className="flex items-center gap-4">
-                    <div className="p-3 bg-primary/10 rounded-xl">
-                      <Upload className="h-6 w-6 text-primary" />
+                <div className="p-4 sm:p-6 border border-border/50 rounded-xl bg-card/30 backdrop-blur-sm animate-scale-in">
+                  <div className="flex items-center gap-3 sm:gap-4">
+                    <div className="p-2 sm:p-3 bg-primary/10 rounded-xl">
+                      <Upload className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
                     </div>
                     <div className="flex-1">
-                      <p className="font-semibold text-foreground text-lg">{uploadedFile.name}</p>
+                      <p className="font-semibold text-foreground text-base sm:text-lg">{uploadedFile.name}</p>
                       <p className="text-sm text-muted-foreground">
                         {(uploadedFile.size / 1024).toFixed(2)} KB
                       </p>
                     </div>
                     <button
                       onClick={handleRemoveFile}
-                      className="p-3 hover:bg-destructive/10 rounded-xl transition-colors duration-200 group"
+                      className="p-2 sm:p-3 hover:bg-destructive/10 rounded-xl transition-colors duration-200 group"
                       title="Remove file"
                     >
-                      <X className="h-5 w-5 text-muted-foreground group-hover:text-destructive" />
+                      <X className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground group-hover:text-destructive" />
                     </button>
                   </div>
                 </div>
@@ -505,31 +505,31 @@ export default function UploadPage() {
           )}
 
           {/* Security Options */}
-          <div className="space-y-8 animate-slide-in-left" style={{ animationDelay: '0.3s' }}>
-            <h3 className="text-2xl font-semibold text-foreground flex items-center gap-3">
-              <Shield className="h-6 w-6 text-primary" />
+          <div className="space-y-6 sm:space-y-8 animate-slide-in-left" style={{ animationDelay: '0.3s' }}>
+            <h3 className="text-xl sm:text-2xl font-semibold text-foreground flex items-center gap-2 sm:gap-3">
+              <Shield className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
               Security Options
             </h3>
             
-            <div className="space-y-6">
-              <div className="flex items-center space-x-4 p-6 rounded-xl bg-card/30 border border-border/30 hover:border-primary/30 transition-all duration-200">
+            <div className="space-y-4 sm:space-y-6">
+              <div className="flex items-center space-x-3 sm:space-x-4 p-4 sm:p-6 rounded-xl bg-card/30 border border-border/30 hover:border-primary/30 transition-all duration-200">
                 <Checkbox
                   id="password-protect"
                   checked={passwordProtect}
                   onCheckedChange={handlePasswordProtectChange}
-                  className="data-[state=checked]:bg-primary data-[state=checked]:border-primary w-5 h-5"
+                  className="data-[state=checked]:bg-primary data-[state=checked]:border-primary w-4 h-4 sm:w-5 sm:h-5"
                 />
                 <Label
                   htmlFor="password-protect"
-                  className="text-base font-medium text-foreground cursor-pointer flex items-center gap-3"
+                  className="text-sm sm:text-base font-medium text-foreground cursor-pointer flex items-center gap-2 sm:gap-3"
                 >
-                  <Shield className="h-5 w-5 text-primary" />
+                  <Shield className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                   Password Protection
                 </Label>
               </div>
 
               {passwordProtect && (
-                <div className="pl-10 animate-scale-in">
+                <div className="pl-6 sm:pl-10 animate-scale-in">
                   <Input
                     type="password"
                     placeholder="Enter a secure password..."
@@ -540,44 +540,44 @@ export default function UploadPage() {
                 </div>
               )}
 
-              <div className="flex items-center space-x-4 p-6 rounded-xl bg-card/30 border border-border/30 hover:border-primary/30 transition-all duration-200">
+              <div className="flex items-center space-x-3 sm:space-x-4 p-4 sm:p-6 rounded-xl bg-card/30 border border-border/30 hover:border-primary/30 transition-all duration-200">
                 <Checkbox
                   id="self-destruct"
                   checked={selfDestruct}
                   onCheckedChange={handleSelfDestructChange}
-                  className="data-[state=checked]:bg-primary data-[state=checked]:border-primary w-5 h-5"
+                  className="data-[state=checked]:bg-primary data-[state=checked]:border-primary w-4 h-4 sm:w-5 sm:h-5"
                 />
                 <Label
                   htmlFor="self-destruct"
-                  className="text-base font-medium text-foreground cursor-pointer flex items-center gap-3"
+                  className="text-sm sm:text-base font-medium text-foreground cursor-pointer flex items-center gap-2 sm:gap-3"
                 >
-                  <Clock className="h-5 w-5 text-orange-500" />
+                  <Clock className="h-4 w-4 sm:h-5 sm:w-5 text-orange-500" />
                   Self Destruct
                 </Label>
               </div>
 
               {selfDestruct && (
-                <div className="pl-10 space-y-6 animate-scale-in">
-                  <div className="flex items-center space-x-4 p-4 rounded-xl bg-card/20 border border-border/20">
+                <div className="pl-6 sm:pl-10 space-y-4 sm:space-y-6 animate-scale-in">
+                  <div className="flex items-center space-x-3 sm:space-x-4 p-3 sm:p-4 rounded-xl bg-card/20 border border-border/20">
                     <Checkbox
                       id="destruct-views"
                       checked={destructViews}
                       onCheckedChange={(checked) =>
                         setDestructViews(checked === true)
                       }
-                      className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500 w-5 h-5"
+                      className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500 w-4 h-4 sm:w-5 sm:h-5"
                     />
                     <Label
                       htmlFor="destruct-views"
-                      className="text-base font-medium text-foreground cursor-pointer flex items-center gap-3"
+                      className="text-sm sm:text-base font-medium text-foreground cursor-pointer flex items-center gap-2 sm:gap-3"
                     >
-                      <Eye className="h-5 w-5 text-orange-500" />
+                      <Eye className="h-4 w-4 sm:h-5 sm:w-5 text-orange-500" />
                       After Views
                     </Label>
                   </div>
 
                   {destructViews && (
-                    <div className="pl-8 animate-scale-in">
+                    <div className="pl-6 sm:pl-8 animate-scale-in">
                       <Input
                         type="number"
                         placeholder="Number of views"
@@ -588,26 +588,26 @@ export default function UploadPage() {
                     </div>
                   )}
 
-                  <div className="flex items-center space-x-4 p-4 rounded-xl bg-card/20 border border-border/20">
+                  <div className="flex items-center space-x-3 sm:space-x-4 p-3 sm:p-4 rounded-xl bg-card/20 border border-border/20">
                     <Checkbox
                       id="destruct-time"
                       checked={destructTime}
                       onCheckedChange={(checked) =>
                         setDestructTime(checked === true)
                       }
-                      className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500 w-5 h-5"
+                      className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500 w-4 h-4 sm:w-5 sm:h-5"
                     />
                     <Label
                       htmlFor="destruct-time"
-                      className="text-base font-medium text-foreground cursor-pointer flex items-center gap-3"
+                      className="text-sm sm:text-base font-medium text-foreground cursor-pointer flex items-center gap-2 sm:gap-3"
                     >
-                      <Clock className="h-5 w-5 text-orange-500" />
+                      <Clock className="h-4 w-4 sm:h-5 sm:w-5 text-orange-500" />
                       After Time
                     </Label>
                   </div>
 
                   {destructTime && (
-                    <div className="pl-8 animate-scale-in">
+                    <div className="pl-6 sm:pl-8 animate-scale-in">
                       <Input
                         type="number"
                         placeholder="Hours until expiration"
@@ -623,20 +623,20 @@ export default function UploadPage() {
           </div>
 
           {/* Generate Button */}
-          <div className="pt-8 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+          <div className="pt-6 sm:pt-8 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
             <Button
               onClick={handleGenerateAndContinue}
               disabled={!canGenerate || loading}
-              className="w-full h-16 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground font-semibold text-xl rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+              className="w-full h-14 sm:h-16 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground font-semibold text-lg sm:text-xl rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
             >
               {loading ? (
                 <>
-                  <Loader2 className="mr-3 h-6 w-6 animate-spin" />
+                  <Loader2 className="mr-2 sm:mr-3 h-5 w-5 sm:h-6 sm:w-6 animate-spin" />
                   Generating QR Code...
                 </>
               ) : (
                 <>
-                  <Zap className="mr-3 h-6 w-6" />
+                  <Zap className="mr-2 sm:mr-3 h-5 w-5 sm:h-6 sm:w-6" />
                   Generate QR Code
                 </>
               )}
