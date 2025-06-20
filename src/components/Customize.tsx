@@ -1,25 +1,14 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { ArrowLeft, Upload, Download, Copy, Share2, X, Palette, Sparkles } from "lucide-react";
+import { ArrowLeft, Download, Copy, Share2, Palette, Sparkles, ChevronDown } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import { Button } from "./ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./ui/select";
 import { Label } from "./ui/label";
+import { Input } from "./ui/input";
+import { Checkbox } from "./ui/checkbox";
 import { toast } from "sonner";
 
-type FrameOption =
-  | "none"
-  | "rounded"
-  | "circle"
-  | "shadow"
-  | "gradient"
-  | "border";
+type FrameOption = "none" | "rounded" | "square" | "circle" | "modern";
 
 type CustomizePageState = {
   zapId: string;
@@ -35,67 +24,59 @@ export default function CustomizePage() {
   const qrRef = useRef<HTMLDivElement>(null);
 
   const [frameStyle, setFrameStyle] = useState<FrameOption>("none");
-  const [logo, setLogo] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [frameText, setFrameText] = useState("Scan me!");
+  const [frameColor, setFrameColor] = useState("#000000");
+  const [textColor, setTextColor] = useState("#000000");
+  const [backgroundColor, setBackgroundColor] = useState("#ffffff");
+  const [transparentBackground, setTransparentBackground] = useState(false);
 
-  const qrValue = state?.shortUrl || "https://qrcreate.example.com/demo123";
+  const qrValue = state?.shortUrl || "https://zaplink.example.com/demo123";
 
-  useEffect(() => {
-    console.log(state);
-  }, [state]);
-
-  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      if (event.target?.result) setLogo(event.target.result as string);
-    };
-    reader.readAsDataURL(file);
-  };
+  const frameOptions = [
+    { id: "none", label: "No frame", preview: "○" },
+    { id: "rounded", label: "Rounded", preview: "⬜" },
+    { id: "square", label: "Square", preview: "■" },
+    { id: "circle", label: "Circle", preview: "●" },
+    { id: "modern", label: "Modern", preview: "◆" },
+  ];
 
   const getFrameStyle = (): React.CSSProperties => {
+    const baseStyle: React.CSSProperties = {
+      background: transparentBackground ? "transparent" : backgroundColor,
+      padding: frameStyle === "none" ? 0 : 24,
+      position: "relative",
+    };
+
     switch (frameStyle) {
       case "rounded":
         return {
+          ...baseStyle,
           borderRadius: 24,
-          padding: 24,
-          background: "hsl(var(--card))",
+          border: `3px solid ${frameColor}`,
           boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
-          border: "1px solid hsl(var(--border))",
+        };
+      case "square":
+        return {
+          ...baseStyle,
+          border: `3px solid ${frameColor}`,
+          boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
         };
       case "circle":
         return {
+          ...baseStyle,
           borderRadius: "50%",
-          padding: 24,
-          background: "hsl(var(--card))",
+          border: `3px solid ${frameColor}`,
           boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
-          border: "1px solid hsl(var(--border))",
         };
-      case "shadow":
+      case "modern":
         return {
-          boxShadow: "0 20px 60px rgba(0,0,0,0.15)",
-          padding: 24,
-          background: "hsl(var(--card))",
-          borderRadius: 16,
-        };
-      case "gradient":
-        return {
-          padding: 24,
-          background: "linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary)) 100%)",
+          ...baseStyle,
           borderRadius: 20,
-          boxShadow: "0 8px 32px rgba(34, 197, 94, 0.3)",
-        };
-      case "border":
-        return {
-          padding: 24,
-          border: "3px solid hsl(var(--primary))",
-          borderRadius: 16,
-          background: "hsl(var(--card))",
-          boxShadow: "0 8px 32px rgba(0,0,0,0.08)",
+          background: `linear-gradient(135deg, ${frameColor}, ${frameColor}dd)`,
+          boxShadow: "0 20px 60px rgba(0,0,0,0.15)",
         };
       default:
-        return {};
+        return baseStyle;
     }
   };
 
@@ -103,24 +84,39 @@ export default function CustomizePage() {
     if (!qrRef.current) return;
     const svgElement = qrRef.current.querySelector("svg");
     if (!svgElement) return;
+    
     const svgData = new XMLSerializer().serializeToString(svgElement);
-    const svgBlob = new Blob([svgData], {
-      type: "image/svg+xml;charset=utf-8",
-    });
+    const svgBlob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
     const svgUrl = URL.createObjectURL(svgBlob);
+    
     const img = new Image();
     img.onload = () => {
       const canvas = document.createElement("canvas");
-      canvas.width = 300;
-      canvas.height = 300;
+      canvas.width = 400;
+      canvas.height = frameText && frameStyle !== "none" ? 450 : 400;
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
-      ctx.fillStyle = "#fff";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      
+      // Set background
+      if (!transparentBackground) {
+        ctx.fillStyle = backgroundColor;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
+      
+      // Draw QR code
+      ctx.drawImage(img, 0, 0, 400, 400);
+      
+      // Add frame text if applicable
+      if (frameText && frameStyle !== "none") {
+        ctx.fillStyle = textColor;
+        ctx.font = "bold 24px Inter, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(frameText, canvas.width / 2, canvas.height - 20);
+      }
+      
       const pngFile = canvas.toDataURL("image/png");
       const downloadLink = document.createElement("a");
-      downloadLink.download = `zap-qr-${state?.name || "code"}.png`;
+      downloadLink.download = `zaplink-qr-${state?.name || "code"}.png`;
       downloadLink.href = pngFile;
       downloadLink.click();
       URL.revokeObjectURL(svgUrl);
@@ -149,10 +145,10 @@ export default function CustomizePage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background page-enter">
       {/* Header */}
-      <header className="bg-card/50 backdrop-blur-sm border-b border-border/50 sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex items-center gap-4">
+      <header className="glass-nav sticky top-0 z-50">
+        <div className="container mx-auto px-6 py-4 flex items-center gap-4">
           <Link
             to="/upload"
             className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-all duration-200 hover:scale-105"
@@ -168,151 +164,168 @@ export default function CustomizePage() {
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-10 max-w-6xl">
-        <div className="bg-card/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 space-y-8 border border-border/50 animate-fade-in-up">
+      <main className="container mx-auto px-6 py-12 max-w-7xl">
+        <div className="bg-card/50 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-border/30 animate-fade-in-up">
           {/* Step Indicator */}
-          <div className="flex items-center justify-between mb-8">
-            <span className="text-sm text-primary font-semibold bg-primary/10 px-3 py-1 rounded-full">
+          <div className="flex items-center justify-between mb-12">
+            <span className="text-sm text-primary font-semibold bg-primary/10 px-4 py-2 rounded-full">
               Step 3 of 3
             </span>
-            <div className="flex-1 mx-4 h-2 bg-muted rounded-full overflow-hidden">
+            <div className="flex-1 mx-6 h-2 bg-muted/30 rounded-full overflow-hidden">
               <div className="progress-bar h-full w-full"></div>
             </div>
-            <span className="text-sm text-primary font-semibold flex items-center gap-1">
-              <Sparkles className="h-3 w-3" />
+            <span className="text-sm text-primary font-semibold flex items-center gap-2">
+              <Sparkles className="h-4 w-4" />
               Ready!
             </span>
           </div>
 
-          {/* Two-column layout: Preview on left, Controls on right */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* QR Preview Card */}
+          {/* Two-column layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+            {/* QR Preview */}
             <div className="flex flex-col items-center justify-center animate-scale-in">
-              <div className="bg-gradient-to-br from-card to-card/50 p-8 rounded-3xl border border-border/50 shadow-2xl backdrop-blur-sm">
+              <div className="bg-gradient-to-br from-card to-card/30 p-12 rounded-3xl border border-border/30 shadow-2xl backdrop-blur-sm">
                 <div
                   ref={qrRef}
-                  className="flex items-center justify-center transition-all duration-500 hover:scale-105"
+                  className="flex flex-col items-center justify-center transition-all duration-500 hover:scale-105"
                   style={getFrameStyle()}
                 >
                   <QRCodeSVG
                     value={qrValue}
                     size={280}
-                    bgColor="#fff"
+                    bgColor={transparentBackground ? "transparent" : backgroundColor}
                     fgColor="#000"
                     level="H"
                     includeMargin
-                    imageSettings={
-                      logo
-                        ? { src: logo, height: 60, width: 60, excavate: true }
-                        : undefined
-                    }
                   />
+                  {frameText && frameStyle !== "none" && (
+                    <div 
+                      className="mt-4 text-center font-semibold text-lg"
+                      style={{ color: textColor }}
+                    >
+                      {frameText}
+                    </div>
+                  )}
                 </div>
               </div>
-              <p className="text-sm text-muted-foreground mt-6 text-center">
-                Scan to preview your QR code
-              </p>
             </div>
 
             {/* Customization Controls */}
             <div className="space-y-8 animate-slide-in-left" style={{ animationDelay: '0.2s' }}>
-              <div className="flex items-center gap-3 mb-6">
-                <div className="p-2 bg-primary/10 rounded-lg">
-                  <Palette className="h-5 w-5 text-primary" />
+              <div className="flex items-center gap-3 mb-8">
+                <div className="p-3 bg-primary/10 rounded-xl">
+                  <Palette className="h-6 w-6 text-primary" />
                 </div>
-                <h2 className="text-2xl font-bold text-foreground">Design Options</h2>
+                <h2 className="text-3xl font-bold text-foreground">Customize Design</h2>
               </div>
 
-              {/* Frame Style Selector */}
-              <div className="space-y-4">
-                <Label
-                  htmlFor="frame-style"
-                  className="text-base font-semibold text-foreground flex items-center gap-2"
-                >
-                  <span className="w-2 h-2 bg-primary rounded-full"></span>
-                  Frame Style
+              {/* QR Code Frame */}
+              <div className="space-y-6">
+                <Label className="text-lg font-semibold text-foreground flex items-center gap-2">
+                  <span className="w-3 h-3 bg-primary rounded-full"></span>
+                  QR code frame
                 </Label>
-                <Select
-                  value={frameStyle}
-                  onValueChange={(value: string) =>
-                    setFrameStyle(value as FrameOption)
-                  }
-                >
-                  <SelectTrigger
-                    id="frame-style"
-                    className="w-full h-12 rounded-xl border-border/50 bg-background/50 backdrop-blur-sm text-foreground font-medium"
-                  >
-                    <SelectValue placeholder="Select a frame style" />
-                  </SelectTrigger>
-                  <SelectContent className="rounded-xl border border-border/50 bg-card/90 backdrop-blur-sm text-foreground shadow-2xl">
-                    <SelectItem value="none" className="rounded-lg">None</SelectItem>
-                    <SelectItem value="rounded" className="rounded-lg">Rounded Corners</SelectItem>
-                    <SelectItem value="circle" className="rounded-lg">Circle</SelectItem>
-                    <SelectItem value="shadow" className="rounded-lg">Shadow</SelectItem>
-                    <SelectItem value="gradient" className="rounded-lg">Gradient</SelectItem>
-                    <SelectItem value="border" className="rounded-lg">Accent Border</SelectItem>
-                  </SelectContent>
-                </Select>
+                
+                <div className="grid grid-cols-5 gap-4">
+                  {frameOptions.map((option) => (
+                    <button
+                      key={option.id}
+                      onClick={() => setFrameStyle(option.id as FrameOption)}
+                      className={`p-4 rounded-2xl border-2 transition-all duration-200 hover:scale-105 ${
+                        frameStyle === option.id
+                          ? "border-primary bg-primary/10"
+                          : "border-border/50 hover:border-primary/50"
+                      }`}
+                    >
+                      <div className="w-12 h-12 bg-muted/30 rounded-lg flex items-center justify-center mb-2 mx-auto">
+                        <span className="text-2xl">{option.preview}</span>
+                      </div>
+                      <span className="text-xs font-medium text-foreground">{option.label}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
 
-              {/* Logo Upload */}
-              <div className="space-y-4">
-                <Label
-                  htmlFor="logo-upload"
-                  className="text-base font-semibold text-foreground flex items-center gap-2"
-                >
-                  <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-                  Upload Logo (Optional)
-                </Label>
-                <div
-                  className="relative border-2 border-dashed rounded-2xl p-6 text-center transition-all duration-300 cursor-pointer border-border/50 bg-background/30 hover:border-primary/50 hover:bg-primary/5 backdrop-blur-sm"
-                  onClick={() => fileInputRef.current?.click()}
-                >
-                  <input
-                    type="file"
-                    ref={fileInputRef}
-                    onChange={handleLogoUpload}
-                    className="hidden"
-                    id="logo-upload"
-                    accept="image/*"
+              {/* Frame Text */}
+              <div className="grid grid-cols-2 gap-6">
+                <div className="space-y-3">
+                  <Label className="text-base font-semibold text-foreground">Frame text</Label>
+                  <Input
+                    value={frameText}
+                    onChange={(e) => setFrameText(e.target.value)}
+                    placeholder="Scan me!"
+                    className="h-12 rounded-xl border-border/50 bg-background/50 backdrop-blur-sm"
                   />
-                  {logo ? (
-                    <div className="flex items-center justify-center space-x-3">
-                      <img
-                        src={logo}
-                        alt="Logo Preview"
-                        className="h-16 w-16 object-contain rounded-lg"
-                      />
-                      <span className="text-foreground font-medium">Logo uploaded</span>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setLogo(null);
-                        }}
-                        className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-lg"
-                      >
-                        <X className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="flex flex-col items-center justify-center space-y-3">
-                      <div className="p-3 bg-primary/10 rounded-xl">
-                        <Upload className="h-8 w-8 text-primary" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-foreground">
-                          Click to upload image
-                        </p>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          PNG, JPG up to 2MB
-                        </p>
-                      </div>
-                    </div>
-                  )}
                 </div>
+                
+                <div className="space-y-3">
+                  <Label className="text-base font-semibold text-foreground">Text color</Label>
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="color"
+                      value={textColor}
+                      onChange={(e) => setTextColor(e.target.value)}
+                      className="color-picker"
+                    />
+                    <Input
+                      value={textColor}
+                      onChange={(e) => setTextColor(e.target.value)}
+                      className="h-12 rounded-xl border-border/50 bg-background/50 backdrop-blur-sm font-mono"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Frame Color */}
+              <div className="grid grid-cols-2 gap-6">
+                <div className="space-y-3">
+                  <Label className="text-base font-semibold text-foreground">Frame color</Label>
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="color"
+                      value={frameColor}
+                      onChange={(e) => setFrameColor(e.target.value)}
+                      className="color-picker"
+                    />
+                    <Input
+                      value={frameColor}
+                      onChange={(e) => setFrameColor(e.target.value)}
+                      className="h-12 rounded-xl border-border/50 bg-background/50 backdrop-blur-sm font-mono"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <Label className="text-base font-semibold text-foreground">Background color</Label>
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="color"
+                      value={backgroundColor}
+                      onChange={(e) => setBackgroundColor(e.target.value)}
+                      className="color-picker"
+                      disabled={transparentBackground}
+                    />
+                    <Input
+                      value={backgroundColor}
+                      onChange={(e) => setBackgroundColor(e.target.value)}
+                      className="h-12 rounded-xl border-border/50 bg-background/50 backdrop-blur-sm font-mono"
+                      disabled={transparentBackground}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Transparent Background */}
+              <div className="flex items-center space-x-3 p-4 rounded-xl bg-card/30 border border-border/30">
+                <Checkbox
+                  id="transparent-bg"
+                  checked={transparentBackground}
+                  onCheckedChange={(checked) => setTransparentBackground(checked === true)}
+                  className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                />
+                <Label htmlFor="transparent-bg" className="text-base font-medium text-foreground cursor-pointer">
+                  Transparent background
+                </Label>
               </div>
 
               {/* Actions */}
@@ -321,16 +334,18 @@ export default function CustomizePage() {
                   <div className="p-2 bg-green-500/10 rounded-lg">
                     <Sparkles className="h-5 w-5 text-green-500" />
                   </div>
-                  <h2 className="text-xl font-bold text-foreground">Actions</h2>
+                  <h3 className="text-xl font-bold text-foreground">Export & Share</h3>
                 </div>
+                
                 <div className="grid grid-cols-1 gap-4">
                   <Button
                     onClick={handleDownload}
-                    className="h-12 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:scale-[1.02] shadow-lg hover:shadow-xl"
+                    className="h-14 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground font-semibold text-lg rounded-xl transition-all duration-300 hover:scale-[1.02] shadow-lg hover:shadow-xl"
                   >
                     <Download className="h-5 w-5 mr-2" />
                     Download QR Code
                   </Button>
+                  
                   <div className="grid grid-cols-2 gap-4">
                     <Button
                       onClick={handleCopyLink}
@@ -351,27 +366,6 @@ export default function CustomizePage() {
                   </div>
                 </div>
               </div>
-
-              {/* QR Info */}
-              {state && (
-                <div className="p-6 bg-card/30 rounded-2xl border border-border/30 backdrop-blur-sm">
-                  <h3 className="font-semibold text-foreground mb-3">QR Code Details</h3>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Name:</span>
-                      <span className="text-foreground font-medium">{state.name}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Type:</span>
-                      <span className="text-foreground font-medium">{state.type}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Short URL:</span>
-                      <span className="text-primary font-mono text-xs break-all">{state.shortUrl}</span>
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         </div>

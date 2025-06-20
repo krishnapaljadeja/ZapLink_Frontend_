@@ -4,7 +4,7 @@
 @tailwind utilities;
 
 :root {
-  /* Light theme */
+  /* Dark theme (default) */
   --background: 240 10% 3.9%;
   --foreground: 0 0% 98%;
   --card: 240 10% 3.9%;
@@ -63,7 +63,18 @@ body {
   scroll-behavior: smooth;
 }
 
-/* Custom animations */
+/* Page transition animations */
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -106,6 +117,10 @@ body {
   }
 }
 
+.page-enter {
+  animation: pageEnter 0.4s ease-out;
+}
+
 .animate-fade-in-up {
   animation: fadeInUp 0.6s ease-out;
 }
@@ -122,26 +137,17 @@ body {
   animation: slideInFromLeft 0.5s ease-out;
 }
 
-/* Gradient backgrounds */
-.gradient-bg {
-  background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary)) 100%);
+/* Glass morphism effect for navbar */
+.glass-nav {
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.gradient-bg-subtle {
-  background: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--muted)) 100%);
-}
-
-/* Glass morphism effect */
-.glass {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.light .glass {
+.light .glass-nav {
   background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 /* Custom scrollbar */
@@ -203,4 +209,18 @@ body {
   background: linear-gradient(90deg, hsl(var(--primary)) 0%, hsl(var(--primary)) 100%);
   border-radius: 9999px;
   transition: width 0.3s ease;
+}
+
+/* Color picker styles */
+.color-picker {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.color-picker:hover {
+  transform: scale(1.1);
 }

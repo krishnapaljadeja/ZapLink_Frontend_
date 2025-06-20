@@ -14,7 +14,7 @@ type ThemeProviderState = {
 };
 
 const initialState: ThemeProviderState = {
-  theme: "light",
+  theme: "dark",
   setTheme: () => null,
 };
 
@@ -22,8 +22,8 @@ const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 
 export function ThemeProvider({
   children,
-  defaultTheme = "light",
-  storageKey = "vite-ui-theme",
+  defaultTheme = "dark",
+  storageKey = "zaplink-theme",
   ...props
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(
@@ -34,27 +34,6 @@ export function ThemeProvider({
     const root = window.document.documentElement;
     root.classList.remove("light", "dark");
     root.classList.add(theme);
-
-    // Update CSS variables based on theme
-    if (theme === "light") {
-      document.documentElement.style.setProperty("--background", "#f8fafc");
-      document.documentElement.style.setProperty("--foreground", "#1e293b");
-      document.documentElement.style.setProperty("--card", "#ffffff");
-      document.documentElement.style.setProperty(
-        "--card-foreground",
-        "#1e293b"
-      );
-      document.documentElement.style.setProperty("--border", "#e2e8f0");
-    } else {
-      document.documentElement.style.setProperty("--background", "#1e293b");
-      document.documentElement.style.setProperty("--foreground", "#f8fafc");
-      document.documentElement.style.setProperty("--card", "#334155");
-      document.documentElement.style.setProperty(
-        "--card-foreground",
-        "#f8fafc"
-      );
-      document.documentElement.style.setProperty("--border", "#475569");
-    }
   }, [theme]);
 
   const value = {

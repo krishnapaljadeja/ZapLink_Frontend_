@@ -5,9 +5,9 @@ import { ThemeToggle } from "./ThemeToggle";
 
 export default function HowItWorks() {
   return (
-    <div className="min-h-screen bg-background">
-      <header className="bg-card/50 backdrop-blur-sm border-b border-border/50 sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+    <div className="min-h-screen bg-background page-enter">
+      <header className="glass-nav sticky top-0 z-50">
+        <div className="container mx-auto px-6 py-4 flex items-center justify-between">
           <Link
             to="/"
             className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-all duration-200 hover:scale-105"
@@ -19,8 +19,8 @@ export default function HowItWorks() {
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-16 max-w-6xl">
-        <div className="bg-card/80 backdrop-blur-sm rounded-3xl shadow-2xl p-12 space-y-16 border border-border/50 animate-fade-in-up">
+      <main className="container mx-auto px-6 py-16 max-w-6xl">
+        <div className="bg-card/50 backdrop-blur-sm rounded-3xl shadow-2xl p-12 space-y-16 border border-border/30 animate-fade-in-up">
           <div className="text-center space-y-6">
             <div className="inline-flex items-center gap-3 bg-primary/10 px-6 py-3 rounded-full">
               <Zap className="h-6 w-6 text-primary" />
@@ -36,7 +36,7 @@ export default function HowItWorks() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="space-y-6 bg-card/30 p-8 rounded-2xl border border-border/30 hover:border-primary/30 transition-all duration-300 hover:shadow-lg animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+            <div className="space-y-6 bg-card/30 p-8 rounded-2xl border border-border/30 hover:border-primary/30 transition-all duration-300 hover:shadow-lg animate-fade-in-up card-hover" style={{ animationDelay: '0.1s' }}>
               <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg">
                 <Upload className="h-8 w-8 text-white" />
               </div>
@@ -58,7 +58,7 @@ export default function HowItWorks() {
               </div>
             </div>
 
-            <div className="space-y-6 bg-card/30 p-8 rounded-2xl border border-border/30 hover:border-primary/30 transition-all duration-300 hover:shadow-lg animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+            <div className="space-y-6 bg-card/30 p-8 rounded-2xl border border-border/30 hover:border-primary/30 transition-all duration-300 hover:shadow-lg animate-fade-in-up card-hover" style={{ animationDelay: '0.2s' }}>
               <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center shadow-lg">
                 <Shield className="h-8 w-8 text-white" />
               </div>
@@ -79,7 +79,7 @@ export default function HowItWorks() {
               </div>
             </div>
 
-            <div className="space-y-6 bg-card/30 p-8 rounded-2xl border border-border/30 hover:border-primary/30 transition-all duration-300 hover:shadow-lg animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+            <div className="space-y-6 bg-card/30 p-8 rounded-2xl border border-border/30 hover:border-primary/30 transition-all duration-300 hover:shadow-lg animate-fade-in-up card-hover" style={{ animationDelay: '0.3s' }}>
               <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
                 <Palette className="h-8 w-8 text-white" />
               </div>

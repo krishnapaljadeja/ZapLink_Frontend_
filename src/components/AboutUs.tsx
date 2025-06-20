@@ -5,9 +5,9 @@ import { ThemeToggle } from "./ThemeToggle";
 
 export default function AboutUs() {
   return (
-    <div className="min-h-screen bg-background">
-      <header className="bg-card/50 backdrop-blur-sm border-b border-border/50 sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+    <div className="min-h-screen bg-background page-enter">
+      <header className="glass-nav sticky top-0 z-50">
+        <div className="container mx-auto px-6 py-4 flex items-center justify-between">
           <Link
             to="/"
             className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-all duration-200 hover:scale-105"
@@ -19,8 +19,8 @@ export default function AboutUs() {
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-16 max-w-6xl">
-        <div className="bg-card/80 backdrop-blur-sm rounded-3xl shadow-2xl p-12 space-y-16 border border-border/50 animate-fade-in-up">
+      <main className="container mx-auto px-6 py-16 max-w-6xl">
+        <div className="bg-card/50 backdrop-blur-sm rounded-3xl shadow-2xl p-12 space-y-16 border border-border/30 animate-fade-in-up">
           <div className="text-center space-y-6">
             <div className="inline-flex items-center gap-3 bg-primary/10 px-6 py-3 rounded-full">
               <Heart className="h-6 w-6 text-primary" />
@@ -36,7 +36,7 @@ export default function AboutUs() {
           </div>
 
           <div className="grid md:grid-cols-2 gap-12">
-            <div className="bg-card/30 rounded-2xl p-8 space-y-6 border border-border/30 hover:border-primary/30 transition-all duration-300 hover:shadow-lg animate-scale-in" style={{ animationDelay: '0.1s' }}>
+            <div className="bg-card/30 rounded-2xl p-8 space-y-6 border border-border/30 hover:border-primary/30 transition-all duration-300 hover:shadow-lg animate-scale-in card-hover" style={{ animationDelay: '0.1s' }}>
               <div className="text-center">
                 <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl mx-auto flex items-center justify-center shadow-lg mb-4">
                   <span className="text-3xl font-bold text-white">KJ</span>
@@ -79,7 +79,7 @@ export default function AboutUs() {
               </div>
             </div>
 
-            <div className="bg-card/30 rounded-2xl p-8 space-y-6 border border-border/30 hover:border-primary/30 transition-all duration-300 hover:shadow-lg animate-scale-in" style={{ animationDelay: '0.2s' }}>
+            <div className="bg-card/30 rounded-2xl p-8 space-y-6 border border-border/30 hover:border-primary/30 transition-all duration-300 hover:shadow-lg animate-scale-in card-hover" style={{ animationDelay: '0.2s' }}>
               <div className="text-center">
                 <div className="w-24 h-24 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl mx-auto flex items-center justify-center shadow-lg mb-4">
                   <span className="text-3xl font-bold text-white">VK</span>

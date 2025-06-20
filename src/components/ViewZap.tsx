@@ -288,7 +288,7 @@ export default function ViewZap() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="min-h-screen flex items-center justify-center bg-background page-enter">
         <div className="text-center animate-fade-in">
           <div className="w-16 h-16 border-4 border-primary/30 border-t-primary rounded-full animate-spin mx-auto mb-4"></div>
           <div className="text-lg text-muted-foreground">Loading your content...</div>
@@ -299,45 +299,45 @@ export default function ViewZap() {
 
   if (passwordRequired) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-background p-4">
-        <div className="bg-card/80 backdrop-blur-sm p-8 rounded-3xl shadow-2xl border border-border/50 max-w-md w-full text-center animate-scale-in">
-          <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
-            <Shield className="h-8 w-8 text-primary" />
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background p-6 page-enter">
+        <div className="bg-card/50 backdrop-blur-sm p-10 rounded-3xl shadow-2xl border border-border/30 max-w-md w-full text-center animate-scale-in">
+          <div className="w-20 h-20 bg-primary/10 rounded-3xl flex items-center justify-center mx-auto mb-8">
+            <Shield className="h-10 w-10 text-primary" />
           </div>
-          <h2 className="text-2xl font-bold text-foreground mb-2">
+          <h2 className="text-3xl font-bold text-foreground mb-3">
             Password Protected
           </h2>
-          <p className="text-muted-foreground mb-6">
+          <p className="text-muted-foreground mb-8 text-lg">
             This content is secured. Please enter the password to continue.
           </p>
-          <form onSubmit={handlePasswordSubmit} className="space-y-4">
+          <form onSubmit={handlePasswordSubmit} className="space-y-6">
             <Input
               type="password"
               placeholder="Enter password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="input-focus text-base rounded-xl border-border/50 bg-background/50 backdrop-blur-sm h-12 px-4 font-medium"
+              className="input-focus text-base rounded-xl border-border/50 bg-background/50 backdrop-blur-sm h-14 px-6 font-medium text-lg"
               disabled={verifying}
               autoFocus
             />
             {passwordError && (
-              <div className="text-destructive text-sm bg-destructive/10 p-3 rounded-lg border border-destructive/20">
+              <div className="text-destructive text-sm bg-destructive/10 p-4 rounded-xl border border-destructive/20">
                 {passwordError}
               </div>
             )}
             <Button
               type="submit"
-              className="w-full h-12 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+              className="w-full h-14 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground font-semibold text-lg rounded-xl transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
               disabled={verifying || !password}
             >
               {verifying ? (
                 <>
-                  <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin mr-2"></div>
+                  <div className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin mr-3"></div>
                   Verifying...
                 </>
               ) : (
                 <>
-                  <Lock className="h-4 w-4 mr-2" />
+                  <Lock className="h-5 w-5 mr-3" />
                   Unlock Content
                 </>
               )}
@@ -351,20 +351,20 @@ export default function ViewZap() {
   if (error) {
     const ErrorIcon = getErrorIcon(errorType);
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-background p-4">
-        <div className="bg-card/80 backdrop-blur-sm p-8 rounded-3xl shadow-2xl border border-border/50 max-w-md w-full text-center animate-scale-in">
-          <div className="w-16 h-16 bg-destructive/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
-            <ErrorIcon className="h-8 w-8 text-destructive" />
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background p-6 page-enter">
+        <div className="bg-card/50 backdrop-blur-sm p-10 rounded-3xl shadow-2xl border border-border/30 max-w-md w-full text-center animate-scale-in">
+          <div className="w-20 h-20 bg-destructive/10 rounded-3xl flex items-center justify-center mx-auto mb-8">
+            <ErrorIcon className="h-10 w-10 text-destructive" />
           </div>
-          <h2 className="text-2xl font-bold text-foreground mb-2">
+          <h2 className="text-3xl font-bold text-foreground mb-3">
             {getErrorHeading(errorType)}
           </h2>
-          <p className="text-muted-foreground mb-6">{error}</p>
+          <p className="text-muted-foreground mb-8 text-lg">{error}</p>
           <Button 
             onClick={() => (window.location.href = "/")} 
-            className="bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:scale-[1.02] h-12 px-6"
+            className="bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:scale-[1.02] h-14 px-8 text-lg"
           >
-            <Home className="h-4 w-4 mr-2" />
+            <Home className="h-5 w-5 mr-3" />
             Go Home
           </Button>
         </div>
