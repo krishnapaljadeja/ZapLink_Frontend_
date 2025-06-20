@@ -146,10 +146,10 @@ export default function ViewZap() {
           // Escape HTML entities for security
           const escapeHtml = (unsafe: string) =>
             unsafe
-              .replace(/&/g, "&")
-              .replace(/</g, "<")
-              .replace(/>/g, ">")
-              .replace(/"/g, """)
+              .replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
               .replace(/'/g, "&#039;");
           const escapedContent = escapeHtml(content);
           const escapedName = escapeHtml(name || "Untitled");
