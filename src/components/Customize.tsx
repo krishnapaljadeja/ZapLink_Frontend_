@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { ArrowLeft, Download, Copy, Share2, Palette, Sparkles, ChevronDown } from "lucide-react";
+import { ArrowLeft, Download, Copy, Share2, Palette, Sparkles } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";

@@ -11,7 +11,6 @@ import {
   Moon,
   Sun,
   Zap,
-  ArrowRight,
 } from "lucide-react";
 
 import { Button } from "./ui/button";
