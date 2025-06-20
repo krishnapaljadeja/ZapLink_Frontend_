@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { ArrowLeft, Upload, Download, Copy, Share2, X } from "lucide-react";
+import { ArrowLeft, Upload, Download, Copy, Share2, X, Palette, Sparkles } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import { Button } from "./ui/button";
 import {
@@ -58,39 +58,41 @@ export default function CustomizePage() {
     switch (frameStyle) {
       case "rounded":
         return {
-          borderRadius: 12,
-          padding: 20,
-          background: "var(--card)",
-          boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
+          borderRadius: 24,
+          padding: 24,
+          background: "hsl(var(--card))",
+          boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
+          border: "1px solid hsl(var(--border))",
         };
       case "circle":
         return {
           borderRadius: "50%",
-          padding: 20,
-          background: "var(--card)",
-          boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
+          padding: 24,
+          background: "hsl(var(--card))",
+          boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
+          border: "1px solid hsl(var(--border))",
         };
       case "shadow":
         return {
-          boxShadow: "0 8px 20px rgba(0,0,0,0.08)",
-          padding: 20,
-          background: "var(--card)",
+          boxShadow: "0 20px 60px rgba(0,0,0,0.15)",
+          padding: 24,
+          background: "hsl(var(--card))",
+          borderRadius: 16,
         };
       case "gradient":
         return {
-          padding: 20,
-          background:
-            "linear-gradient(135deg, var(--background) 0%, var(--border) 100%)",
-          borderRadius: 12,
-          boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
+          padding: 24,
+          background: "linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary)) 100%)",
+          borderRadius: 20,
+          boxShadow: "0 8px 32px rgba(34, 197, 94, 0.3)",
         };
       case "border":
         return {
-          padding: 20,
-          border: "2px solid var(--border)",
-          borderRadius: 12,
-          background: "var(--card)",
-          boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
+          padding: 24,
+          border: "3px solid hsl(var(--primary))",
+          borderRadius: 16,
+          background: "hsl(var(--card))",
+          boxShadow: "0 8px 32px rgba(0,0,0,0.08)",
         };
       default:
         return {};
@@ -149,65 +151,85 @@ export default function CustomizePage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-card shadow-sm border-b border-border">
+      <header className="bg-card/50 backdrop-blur-sm border-b border-border/50 sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center gap-4">
           <Link
             to="/upload"
-            className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+            className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-all duration-200 hover:scale-105"
           >
             <ArrowLeft className="h-5 w-5" />
             Back
           </Link>
           <div className="flex-1 text-center">
-            <h1 className="text-2xl font-semibold text-foreground">
+            <h1 className="text-2xl font-semibold bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
               Customize Your QR Code
             </h1>
           </div>
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-10 max-w-4xl">
-        <div className="bg-card rounded-xl shadow-lg p-8 space-y-8 border border-border">
+      <main className="container mx-auto px-4 py-10 max-w-6xl">
+        <div className="bg-card/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 space-y-8 border border-border/50 animate-fade-in-up">
+          {/* Step Indicator */}
+          <div className="flex items-center justify-between mb-8">
+            <span className="text-sm text-primary font-semibold bg-primary/10 px-3 py-1 rounded-full">
+              Step 3 of 3
+            </span>
+            <div className="flex-1 mx-4 h-2 bg-muted rounded-full overflow-hidden">
+              <div className="progress-bar h-full w-full"></div>
+            </div>
+            <span className="text-sm text-primary font-semibold flex items-center gap-1">
+              <Sparkles className="h-3 w-3" />
+              Ready!
+            </span>
+          </div>
+
           {/* Two-column layout: Preview on left, Controls on right */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {/* QR Preview Card */}
-            <div className="flex flex-col items-center justify-center">
-              <div
-                ref={qrRef}
-                className="bg-card p-6 rounded-xl border border-border flex items-center justify-center transition-all"
-                style={getFrameStyle()}
-              >
-                <QRCodeSVG
-                  value={qrValue}
-                  size={240}
-                  bgColor="#fff"
-                  fgColor="#000"
-                  level="H"
-                  includeMargin
-                  imageSettings={
-                    logo
-                      ? { src: logo, height: 50, width: 50, excavate: true }
-                      : undefined
-                  }
-                />
+            <div className="flex flex-col items-center justify-center animate-scale-in">
+              <div className="bg-gradient-to-br from-card to-card/50 p-8 rounded-3xl border border-border/50 shadow-2xl backdrop-blur-sm">
+                <div
+                  ref={qrRef}
+                  className="flex items-center justify-center transition-all duration-500 hover:scale-105"
+                  style={getFrameStyle()}
+                >
+                  <QRCodeSVG
+                    value={qrValue}
+                    size={280}
+                    bgColor="#fff"
+                    fgColor="#000"
+                    level="H"
+                    includeMargin
+                    imageSettings={
+                      logo
+                        ? { src: logo, height: 60, width: 60, excavate: true }
+                        : undefined
+                    }
+                  />
+                </div>
               </div>
-              <p className="text-sm text-muted-foreground mt-4">
+              <p className="text-sm text-muted-foreground mt-6 text-center">
                 Scan to preview your QR code
               </p>
             </div>
 
             {/* Customization Controls */}
-            <div className="space-y-6">
-              <h2 className="text-xl font-semibold text-foreground">
-                Design Options
-              </h2>
+            <div className="space-y-8 animate-slide-in-left" style={{ animationDelay: '0.2s' }}>
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-2 bg-primary/10 rounded-lg">
+                  <Palette className="h-5 w-5 text-primary" />
+                </div>
+                <h2 className="text-2xl font-bold text-foreground">Design Options</h2>
+              </div>
 
               {/* Frame Style Selector */}
-              <div className="space-y-2">
+              <div className="space-y-4">
                 <Label
                   htmlFor="frame-style"
-                  className="text-base font-medium text-foreground"
+                  className="text-base font-semibold text-foreground flex items-center gap-2"
                 >
+                  <span className="w-2 h-2 bg-primary rounded-full"></span>
                   Frame Style
                 </Label>
                 <Select
@@ -218,31 +240,32 @@ export default function CustomizePage() {
                 >
                   <SelectTrigger
                     id="frame-style"
-                    className="w-full rounded-md border-border bg-background text-foreground"
+                    className="w-full h-12 rounded-xl border-border/50 bg-background/50 backdrop-blur-sm text-foreground font-medium"
                   >
                     <SelectValue placeholder="Select a frame style" />
                   </SelectTrigger>
-                  <SelectContent className="rounded-md border border-border bg-card text-foreground shadow-lg">
-                    <SelectItem value="none">None</SelectItem>
-                    <SelectItem value="rounded">Rounded Corners</SelectItem>
-                    <SelectItem value="circle">Circle</SelectItem>
-                    <SelectItem value="shadow">Shadow</SelectItem>
-                    <SelectItem value="gradient">Gradient</SelectItem>
-                    <SelectItem value="border">Thin Border</SelectItem>
+                  <SelectContent className="rounded-xl border border-border/50 bg-card/90 backdrop-blur-sm text-foreground shadow-2xl">
+                    <SelectItem value="none" className="rounded-lg">None</SelectItem>
+                    <SelectItem value="rounded" className="rounded-lg">Rounded Corners</SelectItem>
+                    <SelectItem value="circle" className="rounded-lg">Circle</SelectItem>
+                    <SelectItem value="shadow" className="rounded-lg">Shadow</SelectItem>
+                    <SelectItem value="gradient" className="rounded-lg">Gradient</SelectItem>
+                    <SelectItem value="border" className="rounded-lg">Accent Border</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               {/* Logo Upload */}
-              <div className="space-y-2">
+              <div className="space-y-4">
                 <Label
                   htmlFor="logo-upload"
-                  className="text-base font-medium text-foreground"
+                  className="text-base font-semibold text-foreground flex items-center gap-2"
                 >
+                  <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
                   Upload Logo (Optional)
                 </Label>
                 <div
-                  className="relative border-2 border-dashed rounded-xl p-4 text-center transition-colors cursor-pointer border-border bg-background hover:border-foreground/50"
+                  className="relative border-2 border-dashed rounded-2xl p-6 text-center transition-all duration-300 cursor-pointer border-border/50 bg-background/30 hover:border-primary/50 hover:bg-primary/5 backdrop-blur-sm"
                   onClick={() => fileInputRef.current?.click()}
                 >
                   <input
@@ -254,13 +277,13 @@ export default function CustomizePage() {
                     accept="image/*"
                   />
                   {logo ? (
-                    <div className="flex items-center justify-center space-x-2">
+                    <div className="flex items-center justify-center space-x-3">
                       <img
                         src={logo}
                         alt="Logo Preview"
-                        className="h-16 w-16 object-contain"
+                        className="h-16 w-16 object-contain rounded-lg"
                       />
-                      <span className="text-foreground">Logo uploaded</span>
+                      <span className="text-foreground font-medium">Logo uploaded</span>
                       <Button
                         type="button"
                         variant="ghost"
@@ -269,53 +292,86 @@ export default function CustomizePage() {
                           e.stopPropagation();
                           setLogo(null);
                         }}
-                        className="text-muted-foreground hover:text-foreground"
+                        className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-lg"
                       >
                         <X className="h-4 w-4" />
                       </Button>
                     </div>
                   ) : (
-                    <div className="flex items-center justify-center space-x-2">
-                      <Upload className="h-8 w-8 text-muted-foreground" />
-                      <p className="text-sm text-muted-foreground">
-                        Click to upload image
-                      </p>
+                    <div className="flex flex-col items-center justify-center space-y-3">
+                      <div className="p-3 bg-primary/10 rounded-xl">
+                        <Upload className="h-8 w-8 text-primary" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-foreground">
+                          Click to upload image
+                        </p>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          PNG, JPG up to 2MB
+                        </p>
+                      </div>
                     </div>
                   )}
                 </div>
               </div>
 
               {/* Actions */}
-              <div className="space-y-4 pt-6 border-t border-border">
-                <h2 className="text-xl font-semibold text-foreground">
-                  Actions
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="space-y-6 pt-8 border-t border-border/30">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-2 bg-green-500/10 rounded-lg">
+                    <Sparkles className="h-5 w-5 text-green-500" />
+                  </div>
+                  <h2 className="text-xl font-bold text-foreground">Actions</h2>
+                </div>
+                <div className="grid grid-cols-1 gap-4">
                   <Button
                     onClick={handleDownload}
-                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-md transition-colors flex items-center justify-center gap-2"
+                    className="h-12 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:scale-[1.02] shadow-lg hover:shadow-xl"
                   >
-                    <Download className="h-5 w-5" />
-                    Download QR
+                    <Download className="h-5 w-5 mr-2" />
+                    Download QR Code
                   </Button>
-                  <Button
-                    onClick={handleCopyLink}
-                    variant="outline"
-                    className="border-blue-600 text-blue-600 hover:bg-blue-50 hover:text-blue-700 font-semibold py-2 rounded-md transition-colors flex items-center justify-center gap-2"
-                  >
-                    <Copy className="h-5 w-5" />
-                    Copy Link
-                  </Button>
-                  <Button
-                    onClick={handleShare}
-                    variant="outline"
-                    className="border-blue-600 text-blue-600 hover:bg-blue-50 hover:text-blue-700 font-semibold py-2 rounded-md transition-colors flex items-center justify-center gap-2"
-                  >
-                    <Share2 className="h-5 w-5" />
-                    Share
-                  </Button>
+                  <div className="grid grid-cols-2 gap-4">
+                    <Button
+                      onClick={handleCopyLink}
+                      variant="outline"
+                      className="h-12 border-primary/30 text-primary hover:bg-primary/10 hover:text-primary font-semibold rounded-xl transition-all duration-300 hover:scale-[1.02] bg-background/50 backdrop-blur-sm"
+                    >
+                      <Copy className="h-4 w-4 mr-2" />
+                      Copy Link
+                    </Button>
+                    <Button
+                      onClick={handleShare}
+                      variant="outline"
+                      className="h-12 border-primary/30 text-primary hover:bg-primary/10 hover:text-primary font-semibold rounded-xl transition-all duration-300 hover:scale-[1.02] bg-background/50 backdrop-blur-sm"
+                    >
+                      <Share2 className="h-4 w-4 mr-2" />
+                      Share
+                    </Button>
+                  </div>
                 </div>
               </div>
+
+              {/* QR Info */}
+              {state && (
+                <div className="p-6 bg-card/30 rounded-2xl border border-border/30 backdrop-blur-sm">
+                  <h3 className="font-semibold text-foreground mb-3">QR Code Details</h3>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Name:</span>
+                      <span className="text-foreground font-medium">{state.name}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Type:</span>
+                      <span className="text-foreground font-medium">{state.type}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Short URL:</span>
+                      <span className="text-primary font-mono text-xs break-all">{state.shortUrl}</span>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

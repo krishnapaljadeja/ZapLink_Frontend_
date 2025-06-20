@@ -4,6 +4,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
+import { Shield, AlertTriangle, Home, Lock } from "lucide-react";
 
 function getErrorMessage(errorParam: string | null) {
   if (!errorParam) return null;
@@ -24,6 +25,14 @@ function getErrorHeading(errorParam: string | null) {
   if (errorParam === "notfound") return "Not Found";
   if (errorParam === "incorrect_password") return "Incorrect Password";
   return "Access Denied";
+}
+
+function getErrorIcon(errorParam: string | null) {
+  if (errorParam === "expired") return AlertTriangle;
+  if (errorParam === "viewlimit") return AlertTriangle;
+  if (errorParam === "notfound") return AlertTriangle;
+  if (errorParam === "incorrect_password") return Lock;
+  return AlertTriangle;
 }
 
 export default function ViewZap() {
@@ -137,10 +146,10 @@ export default function ViewZap() {
           // Escape HTML entities for security
           const escapeHtml = (unsafe: string) =>
             unsafe
-              .replace(/&/g, "&amp;")
-              .replace(/</g, "&lt;")
-              .replace(/>/g, "&gt;")
-              .replace(/"/g, "&quot;")
+              .replace(/&/g, "&")
+              .replace(/</g, "<")
+              .replace(/>/g, ">")
+              .replace(/"/g, """)
               .replace(/'/g, "&#039;");
           const escapedContent = escapeHtml(content);
           const escapedName = escapeHtml(name || "Untitled");
@@ -280,37 +289,58 @@ export default function ViewZap() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-lg text-muted-foreground">Loading...</div>
+        <div className="text-center animate-fade-in">
+          <div className="w-16 h-16 border-4 border-primary/30 border-t-primary rounded-full animate-spin mx-auto mb-4"></div>
+          <div className="text-lg text-muted-foreground">Loading your content...</div>
+        </div>
       </div>
     );
   }
 
   if (passwordRequired) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-background">
-        <div className="bg-card p-8 rounded-xl shadow-lg border border-border max-w-md w-full text-center">
-          <h2 className="text-2xl font-bold text-blue-600 mb-4">
-            Password Required
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background p-4">
+        <div className="bg-card/80 backdrop-blur-sm p-8 rounded-3xl shadow-2xl border border-border/50 max-w-md w-full text-center animate-scale-in">
+          <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <Shield className="h-8 w-8 text-primary" />
+          </div>
+          <h2 className="text-2xl font-bold text-foreground mb-2">
+            Password Protected
           </h2>
+          <p className="text-muted-foreground mb-6">
+            This content is secured. Please enter the password to continue.
+          </p>
           <form onSubmit={handlePasswordSubmit} className="space-y-4">
             <Input
               type="password"
               placeholder="Enter password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="text-base rounded-md border border-border focus:border-blue-500 focus:ring focus:ring-blue-200 bg-background text-foreground"
+              className="input-focus text-base rounded-xl border-border/50 bg-background/50 backdrop-blur-sm h-12 px-4 font-medium"
               disabled={verifying}
               autoFocus
             />
             {passwordError && (
-              <div className="text-red-600 text-sm">{passwordError}</div>
+              <div className="text-destructive text-sm bg-destructive/10 p-3 rounded-lg border border-destructive/20">
+                {passwordError}
+              </div>
             )}
             <Button
               type="submit"
-              className="w-full"
+              className="w-full h-12 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
               disabled={verifying || !password}
             >
-              {verifying ? "Verifying..." : "Unlock"}
+              {verifying ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin mr-2"></div>
+                  Verifying...
+                </>
+              ) : (
+                <>
+                  <Lock className="h-4 w-4 mr-2" />
+                  Unlock Content
+                </>
+              )}
             </Button>
           </form>
         </div>
@@ -319,14 +349,22 @@ export default function ViewZap() {
   }
 
   if (error) {
+    const ErrorIcon = getErrorIcon(errorType);
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-background">
-        <div className="bg-card p-8 rounded-xl shadow-lg border border-border max-w-md w-full text-center">
-          <h2 className="text-2xl font-bold text-red-600 mb-4">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background p-4">
+        <div className="bg-card/80 backdrop-blur-sm p-8 rounded-3xl shadow-2xl border border-border/50 max-w-md w-full text-center animate-scale-in">
+          <div className="w-16 h-16 bg-destructive/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <ErrorIcon className="h-8 w-8 text-destructive" />
+          </div>
+          <h2 className="text-2xl font-bold text-foreground mb-2">
             {getErrorHeading(errorType)}
           </h2>
           <p className="text-muted-foreground mb-6">{error}</p>
-          <Button onClick={() => (window.location.href = "/")} className="mt-2">
+          <Button 
+            onClick={() => (window.location.href = "/")} 
+            className="bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:scale-[1.02] h-12 px-6"
+          >
+            <Home className="h-4 w-4 mr-2" />
             Go Home
           </Button>
         </div>

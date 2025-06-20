@@ -1,16 +1,16 @@
 import { Link } from "react-router-dom";
-import { ArrowLeft, Github, Linkedin } from "lucide-react";
+import { ArrowLeft, Github, Linkedin, Zap, Heart, Code, Rocket } from "lucide-react";
 import { Button } from "./ui/button";
 import { ThemeToggle } from "./ThemeToggle";
 
 export default function AboutUs() {
   return (
     <div className="min-h-screen bg-background">
-      <header className="bg-card shadow-sm border-b border-border">
+      <header className="bg-card/50 backdrop-blur-sm border-b border-border/50 sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Link
             to="/"
-            className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+            className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-all duration-200 hover:scale-105"
           >
             <ArrowLeft className="h-5 w-5" />
             Back to Home
@@ -19,104 +19,167 @@ export default function AboutUs() {
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-12 max-w-4xl">
-        <div className="bg-card rounded-xl shadow-lg p-8 space-y-12 border border-border">
-          <div className="text-center space-y-4">
-            <h2 className="text-3xl font-bold text-foreground">
+      <main className="container mx-auto px-4 py-16 max-w-6xl">
+        <div className="bg-card/80 backdrop-blur-sm rounded-3xl shadow-2xl p-12 space-y-16 border border-border/50 animate-fade-in-up">
+          <div className="text-center space-y-6">
+            <div className="inline-flex items-center gap-3 bg-primary/10 px-6 py-3 rounded-full">
+              <Heart className="h-6 w-6 text-primary" />
+              <span className="text-primary font-semibold">About ZapLink</span>
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
               Meet the Team Behind ZapLink
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              We are a team of passionate developers from CHARUSAT University,
-              dedicated to creating innovative solutions for document sharing.
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              We are passionate developers from CHARUSAT University, dedicated to creating innovative 
+              solutions that make file sharing simple, secure, and beautiful.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="bg-background rounded-xl p-6 space-y-4 border border-border">
-              <div className="w-24 h-24 bg-blue-100 dark:bg-blue-900 rounded-full mx-auto flex items-center justify-center">
-                <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                  KJ
-                </span>
-              </div>
-              <div className="text-center space-y-2">
-                <h3 className="text-xl font-semibold text-foreground">
+          <div className="grid md:grid-cols-2 gap-12">
+            <div className="bg-card/30 rounded-2xl p-8 space-y-6 border border-border/30 hover:border-primary/30 transition-all duration-300 hover:shadow-lg animate-scale-in" style={{ animationDelay: '0.1s' }}>
+              <div className="text-center">
+                <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl mx-auto flex items-center justify-center shadow-lg mb-4">
+                  <span className="text-3xl font-bold text-white">KJ</span>
+                </div>
+                <h3 className="text-2xl font-bold text-foreground mb-2">
                   Krishnapal Jadeja
                 </h3>
-                <p className="text-muted-foreground">Full Stack Developer</p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-primary font-semibold mb-1">Full Stack Developer</p>
+                <p className="text-sm text-muted-foreground mb-4">
                   B.Tech Computer Engineering
                 </p>
-                <div className="flex justify-center gap-4 pt-2">
+                <div className="flex justify-center gap-4">
                   <a
                     href="https://github.com/krishnapaljadeja"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-muted-foreground hover:text-foreground transition-colors"
+                    className="p-3 bg-muted/30 hover:bg-primary/10 rounded-xl transition-all duration-200 hover:scale-110 group"
                   >
-                    <Github className="h-5 w-5" />
+                    <Github className="h-5 w-5 text-muted-foreground group-hover:text-primary" />
                   </a>
                   <a
                     href="http://linkedin.com/in/krishnapal-jadeja-39a4ab1b7"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-muted-foreground hover:text-foreground transition-colors"
+                    className="p-3 bg-muted/30 hover:bg-primary/10 rounded-xl transition-all duration-200 hover:scale-110 group"
                   >
-                    <Linkedin className="h-5 w-5" />
+                    <Linkedin className="h-5 w-5 text-muted-foreground group-hover:text-primary" />
                   </a>
+                </div>
+              </div>
+              <div className="space-y-3">
+                <div className="flex items-center gap-3 text-sm">
+                  <Code className="h-4 w-4 text-primary" />
+                  <span className="text-muted-foreground">Backend Architecture & API Design</span>
+                </div>
+                <div className="flex items-center gap-3 text-sm">
+                  <Rocket className="h-4 w-4 text-primary" />
+                  <span className="text-muted-foreground">Cloud Infrastructure & Security</span>
                 </div>
               </div>
             </div>
 
-            <div className="bg-background rounded-xl p-6 space-y-4 border border-border">
-              <div className="w-24 h-24 bg-blue-100 dark:bg-blue-900 rounded-full mx-auto flex items-center justify-center">
-                <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                  VK
-                </span>
-              </div>
-              <div className="text-center space-y-2">
-                <h3 className="text-xl font-semibold text-foreground">
+            <div className="bg-card/30 rounded-2xl p-8 space-y-6 border border-border/30 hover:border-primary/30 transition-all duration-300 hover:shadow-lg animate-scale-in" style={{ animationDelay: '0.2s' }}>
+              <div className="text-center">
+                <div className="w-24 h-24 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl mx-auto flex items-center justify-center shadow-lg mb-4">
+                  <span className="text-3xl font-bold text-white">VK</span>
+                </div>
+                <h3 className="text-2xl font-bold text-foreground mb-2">
                   Vasu Kamani
                 </h3>
-                <p className="text-muted-foreground">Full Stack Developer</p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-primary font-semibold mb-1">Full Stack Developer</p>
+                <p className="text-sm text-muted-foreground mb-4">
                   B.Tech Computer Engineering
                 </p>
-                <div className="flex justify-center gap-4 pt-2">
+                <div className="flex justify-center gap-4">
                   <a
                     href="https://github.com/vasu-CE"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-muted-foreground hover:text-foreground transition-colors"
+                    className="p-3 bg-muted/30 hover:bg-primary/10 rounded-xl transition-all duration-200 hover:scale-110 group"
                   >
-                    <Github className="h-5 w-5" />
+                    <Github className="h-5 w-5 text-muted-foreground group-hover:text-primary" />
                   </a>
                   <a
                     href="http://linkedin.com/in/vasu-kamani-11a07b277/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-muted-foreground hover:text-foreground transition-colors"
+                    className="p-3 bg-muted/30 hover:bg-primary/10 rounded-xl transition-all duration-200 hover:scale-110 group"
                   >
-                    <Linkedin className="h-5 w-5" />
+                    <Linkedin className="h-5 w-5 text-muted-foreground group-hover:text-primary" />
                   </a>
+                </div>
+              </div>
+              <div className="space-y-3">
+                <div className="flex items-center gap-3 text-sm">
+                  <Code className="h-4 w-4 text-primary" />
+                  <span className="text-muted-foreground">Frontend Development & UI/UX</span>
+                </div>
+                <div className="flex items-center gap-3 text-sm">
+                  <Rocket className="h-4 w-4 text-primary" />
+                  <span className="text-muted-foreground">QR Code Generation & Customization</span>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="pt-8 border-t border-border">
-            <div className="text-center space-y-4">
-              <h3 className="text-2xl font-semibold text-foreground">
-                Our Mission
-              </h3>
-              <p className="text-muted-foreground max-w-2xl mx-auto">
-                At ZapLink, we're committed to making document sharing and QR
-                code generation simple, secure, and efficient. Our goal is to
-                provide a seamless experience for users who need to share their
-                documents through QR codes.
-              </p>
-              <Button size="lg" asChild>
-                <Link to="/">Try ZapLink Now</Link>
-              </Button>
+          {/* Mission Section */}
+          <div className="pt-8 border-t border-border/30">
+            <div className="text-center space-y-8 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+              <div className="space-y-4">
+                <h3 className="text-3xl font-bold text-foreground flex items-center justify-center gap-3">
+                  <Zap className="h-8 w-8 text-primary" />
+                  Our Mission
+                </h3>
+                <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+                  At ZapLink, we believe that sharing files should be as simple as scanning a code. 
+                  Our mission is to bridge the gap between complex file sharing and user-friendly design, 
+                  making document sharing accessible to everyone while maintaining the highest standards of security.
+                </p>
+              </div>
+
+              <div className="grid md:grid-cols-3 gap-8 mt-12">
+                <div className="text-center space-y-3">
+                  <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto">
+                    <Zap className="h-8 w-8 text-primary" />
+                  </div>
+                  <h4 className="text-xl font-semibold text-foreground">Innovation</h4>
+                  <p className="text-muted-foreground text-sm">
+                    Constantly pushing the boundaries of what's possible with QR technology
+                  </p>
+                </div>
+                <div className="text-center space-y-3">
+                  <div className="w-16 h-16 bg-blue-500/10 rounded-2xl flex items-center justify-center mx-auto">
+                    <Heart className="h-8 w-8 text-blue-500" />
+                  </div>
+                  <h4 className="text-xl font-semibold text-foreground">User-Centric</h4>
+                  <p className="text-muted-foreground text-sm">
+                    Every feature is designed with our users' needs and experience in mind
+                  </p>
+                </div>
+                <div className="text-center space-y-3">
+                  <div className="w-16 h-16 bg-green-500/10 rounded-2xl flex items-center justify-center mx-auto">
+                    <Code className="h-8 w-8 text-green-500" />
+                  </div>
+                  <h4 className="text-xl font-semibold text-foreground">Excellence</h4>
+                  <p className="text-muted-foreground text-sm">
+                    Committed to delivering high-quality, reliable, and secure solutions
+                  </p>
+                </div>
+              </div>
+
+              <div className="pt-8">
+                <Button 
+                  size="lg" 
+                  className="bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground px-8 py-4 text-lg font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                  asChild
+                >
+                  <Link to="/">
+                    <Zap className="mr-2 h-5 w-5" />
+                    Try ZapLink Now
+                  </Link>
+                </Button>
+              </div>
             </div>
           </div>
         </div>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
-import { ArrowLeft, Upload, Loader2, X } from "lucide-react";
+import { ArrowLeft, Upload, Loader2, X, Shield, Clock, Eye, Zap } from "lucide-react";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Checkbox } from "./ui/checkbox";
@@ -367,79 +367,89 @@ export default function UploadPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-card shadow-sm border-b border-border">
+      <header className="bg-card/50 backdrop-blur-sm border-b border-border/50 sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center gap-4">
           <Link
             to="/"
-            className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+            className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-all duration-200 hover:scale-105"
           >
             <ArrowLeft className="h-5 w-5" />
             Back
           </Link>
           <div className="flex-1 text-center">
-            <h1 className="text-2xl font-semibold text-foreground">
+            <h1 className="text-2xl font-semibold bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
               Upload Your Content
             </h1>
           </div>
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-10 max-w-xl">
-        <div className="bg-card rounded-xl shadow-lg p-8 space-y-8 border border-border">
+      <main className="container mx-auto px-4 py-10 max-w-2xl">
+        <div className="bg-card/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 space-y-8 border border-border/50 animate-fade-in-up">
           {/* Step Indicator */}
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-blue-600 font-medium">
+          <div className="flex items-center justify-between mb-8">
+            <span className="text-sm text-primary font-semibold bg-primary/10 px-3 py-1 rounded-full">
               Step 2 of 3
             </span>
-            <div className="flex-1 mx-4 h-0.5 bg-border">
-              <div className="h-0.5 bg-blue-600 w-2/3" />
+            <div className="flex-1 mx-4 h-2 bg-muted rounded-full overflow-hidden">
+              <div className="progress-bar h-full w-2/3"></div>
             </div>
-            <span className="text-sm text-muted-foreground">Customize →</span>
+            <span className="text-sm text-muted-foreground flex items-center gap-1">
+              Customize
+              <Zap className="h-3 w-3" />
+            </span>
           </div>
 
           {/* QR Code Name */}
-          <div className="space-y-2">
-            <Label className="text-base font-medium text-foreground">
+          <div className="space-y-3 animate-slide-in-left" style={{ animationDelay: '0.1s' }}>
+            <Label className="text-base font-semibold text-foreground flex items-center gap-2">
+              <span className="w-2 h-2 bg-primary rounded-full"></span>
               Name your QR Code
             </Label>
             <Input
               id="qr-name"
-              placeholder="Enter a name for your QR code"
+              placeholder="Enter a memorable name..."
               value={qrName}
               onChange={handleQrNameChange}
-              className="text-base rounded-md border border-border focus:border-blue-500 focus:ring focus:ring-blue-200 bg-background text-foreground"
+              className="input-focus text-base rounded-xl border-border/50 bg-background/50 backdrop-blur-sm h-12 px-4 font-medium"
             />
           </div>
 
           {/* File Upload */}
           {type === "url" ? (
-            <div className="space-y-2">
-              <Label htmlFor="url">Enter URL</Label>
+            <div className="space-y-3 animate-slide-in-left" style={{ animationDelay: '0.2s' }}>
+              <Label htmlFor="url" className="text-base font-semibold text-foreground flex items-center gap-2">
+                <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                Enter URL
+              </Label>
               <Input
                 id="url"
                 type="url"
                 value={urlValue}
                 onChange={(e) => setUrlValue(e.target.value)}
                 placeholder="https://example.com"
-                className="w-full"
+                className="input-focus text-base rounded-xl border-border/50 bg-background/50 backdrop-blur-sm h-12 px-4"
               />
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-muted-foreground pl-4">
                 {TYPE_MESSAGES[type]}
               </p>
             </div>
           ) : type === "text" ? (
-            <div className="space-y-2">
-              <Label htmlFor="text">Enter Text</Label>
+            <div className="space-y-3 animate-slide-in-left" style={{ animationDelay: '0.2s' }}>
+              <Label htmlFor="text" className="text-base font-semibold text-foreground flex items-center gap-2">
+                <span className="w-2 h-2 bg-yellow-500 rounded-full"></span>
+                Enter Text
+              </Label>
               <textarea
                 id="text"
                 value={textValue}
                 onChange={(e) => setTextValue(e.target.value)}
                 placeholder="Enter your text content here..."
-                className="w-full min-h-[120px] p-3 text-base rounded-md border border-border focus:border-blue-500 focus:ring focus:ring-blue-200 bg-background text-foreground resize-vertical"
+                className="w-full min-h-[120px] p-4 text-base rounded-xl border border-border/50 bg-background/50 backdrop-blur-sm text-foreground resize-vertical transition-all duration-200 focus:border-primary/50 focus:ring-2 focus:ring-primary/10"
                 rows={5}
                 maxLength={10000}
               />
-              <div className="flex justify-between items-center">
+              <div className="flex justify-between items-center px-2">
                 <p className="text-sm text-muted-foreground">
                   {TYPE_MESSAGES[type]}
                 </p>
@@ -449,37 +459,44 @@ export default function UploadPage() {
               </div>
             </div>
           ) : (
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="file">Upload File</Label>
-                <Input
-                  id="file"
-                  type="file"
-                  onChange={handleFileChange}
-                  accept={TYPE_EXTENSIONS[type].join(",")}
-                  className="cursor-pointer"
-                />
-                <p className="text-sm text-muted-foreground">
+            <div className="space-y-4 animate-slide-in-left" style={{ animationDelay: '0.2s' }}>
+              <div className="space-y-3">
+                <Label htmlFor="file" className="text-base font-semibold text-foreground flex items-center gap-2">
+                  <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+                  Upload File
+                </Label>
+                <div className="relative">
+                  <Input
+                    id="file"
+                    type="file"
+                    onChange={handleFileChange}
+                    accept={TYPE_EXTENSIONS[type].join(",")}
+                    className="cursor-pointer h-12 rounded-xl border-border/50 bg-background/50 backdrop-blur-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90 transition-all duration-200"
+                  />
+                </div>
+                <p className="text-sm text-muted-foreground pl-4">
                   {TYPE_MESSAGES[type]}
                 </p>
               </div>
 
               {uploadedFile && (
-                <div className="p-4 border rounded-lg bg-card">
+                <div className="p-4 border border-border/50 rounded-xl bg-card/50 backdrop-blur-sm animate-scale-in">
                   <div className="flex items-center gap-3">
-                    <Upload className="h-5 w-5 text-primary" />
+                    <div className="p-2 bg-primary/10 rounded-lg">
+                      <Upload className="h-5 w-5 text-primary" />
+                    </div>
                     <div className="flex-1">
-                      <p className="font-medium">{uploadedFile.name}</p>
+                      <p className="font-semibold text-foreground">{uploadedFile.name}</p>
                       <p className="text-sm text-muted-foreground">
                         {(uploadedFile.size / 1024).toFixed(2)} KB
                       </p>
                     </div>
                     <button
                       onClick={handleRemoveFile}
-                      className="p-1 hover:bg-muted rounded-full transition-colors"
+                      className="p-2 hover:bg-destructive/10 rounded-lg transition-colors duration-200 group"
                       title="Remove file"
                     >
-                      <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+                      <X className="h-4 w-4 text-muted-foreground group-hover:text-destructive" />
                     </button>
                   </div>
                 </div>
@@ -488,127 +505,143 @@ export default function UploadPage() {
           )}
 
           {/* Security Options */}
-          <div className="space-y-4">
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="password-protect"
-                checked={passwordProtect}
-                onCheckedChange={handlePasswordProtectChange}
-                className="border-border data-[state=checked]:bg-blue-600 data-[state=checked]:text-white"
-              />
-              <Label
-                htmlFor="password-protect"
-                className="text-sm font-medium text-foreground"
-              >
-                Password Protect
-              </Label>
-            </div>
-
-            {passwordProtect && (
-              <div className="pl-6">
-                <Input
-                  type="password"
-                  placeholder="Enter password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="text-sm rounded-md border border-border focus:border-blue-500 focus:ring focus:ring-blue-200 bg-background text-foreground"
+          <div className="space-y-6 animate-slide-in-left" style={{ animationDelay: '0.3s' }}>
+            <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+              <Shield className="h-5 w-5 text-primary" />
+              Security Options
+            </h3>
+            
+            <div className="space-y-4">
+              <div className="flex items-center space-x-3 p-4 rounded-xl bg-card/30 border border-border/30 hover:border-primary/30 transition-all duration-200">
+                <Checkbox
+                  id="password-protect"
+                  checked={passwordProtect}
+                  onCheckedChange={handlePasswordProtectChange}
+                  className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                 />
+                <Label
+                  htmlFor="password-protect"
+                  className="text-sm font-medium text-foreground cursor-pointer flex items-center gap-2"
+                >
+                  <Shield className="h-4 w-4 text-primary" />
+                  Password Protection
+                </Label>
               </div>
-            )}
 
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="self-destruct"
-                checked={selfDestruct}
-                onCheckedChange={handleSelfDestructChange}
-                className="border-border data-[state=checked]:bg-blue-600 data-[state=checked]:text-white"
-              />
-              <Label
-                htmlFor="self-destruct"
-                className="text-sm font-medium text-foreground"
-              >
-                Self Destruct
-              </Label>
+              {passwordProtect && (
+                <div className="pl-8 animate-scale-in">
+                  <Input
+                    type="password"
+                    placeholder="Enter a secure password..."
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="input-focus rounded-xl border-border/50 bg-background/50 backdrop-blur-sm h-11"
+                  />
+                </div>
+              )}
+
+              <div className="flex items-center space-x-3 p-4 rounded-xl bg-card/30 border border-border/30 hover:border-primary/30 transition-all duration-200">
+                <Checkbox
+                  id="self-destruct"
+                  checked={selfDestruct}
+                  onCheckedChange={handleSelfDestructChange}
+                  className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                />
+                <Label
+                  htmlFor="self-destruct"
+                  className="text-sm font-medium text-foreground cursor-pointer flex items-center gap-2"
+                >
+                  <Clock className="h-4 w-4 text-orange-500" />
+                  Self Destruct
+                </Label>
+              </div>
+
+              {selfDestruct && (
+                <div className="pl-8 space-y-4 animate-scale-in">
+                  <div className="flex items-center space-x-3 p-3 rounded-lg bg-card/20 border border-border/20">
+                    <Checkbox
+                      id="destruct-views"
+                      checked={destructViews}
+                      onCheckedChange={(checked) =>
+                        setDestructViews(checked === true)
+                      }
+                      className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
+                    />
+                    <Label
+                      htmlFor="destruct-views"
+                      className="text-sm font-medium text-foreground cursor-pointer flex items-center gap-2"
+                    >
+                      <Eye className="h-4 w-4 text-orange-500" />
+                      After Views
+                    </Label>
+                  </div>
+
+                  {destructViews && (
+                    <div className="pl-6 animate-scale-in">
+                      <Input
+                        type="number"
+                        placeholder="Number of views"
+                        value={viewsValue}
+                        onChange={handleViewsValueChange}
+                        className="input-focus rounded-lg border-border/50 bg-background/50 backdrop-blur-sm h-10"
+                      />
+                    </div>
+                  )}
+
+                  <div className="flex items-center space-x-3 p-3 rounded-lg bg-card/20 border border-border/20">
+                    <Checkbox
+                      id="destruct-time"
+                      checked={destructTime}
+                      onCheckedChange={(checked) =>
+                        setDestructTime(checked === true)
+                      }
+                      className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
+                    />
+                    <Label
+                      htmlFor="destruct-time"
+                      className="text-sm font-medium text-foreground cursor-pointer flex items-center gap-2"
+                    >
+                      <Clock className="h-4 w-4 text-orange-500" />
+                      After Time
+                    </Label>
+                  </div>
+
+                  {destructTime && (
+                    <div className="pl-6 animate-scale-in">
+                      <Input
+                        type="number"
+                        placeholder="Hours until expiration"
+                        value={timeValue}
+                        onChange={handleTimeValueChange}
+                        className="input-focus rounded-lg border-border/50 bg-background/50 backdrop-blur-sm h-10"
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
-
-            {selfDestruct && (
-              <div className="pl-6 space-y-4">
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="destruct-views"
-                    checked={destructViews}
-                    onCheckedChange={(checked) =>
-                      setDestructViews(checked === true)
-                    }
-                    className="border-border data-[state=checked]:bg-blue-600 data-[state=checked]:text-white"
-                  />
-                  <Label
-                    htmlFor="destruct-views"
-                    className="text-sm font-medium text-foreground"
-                  >
-                    After Views
-                  </Label>
-                </div>
-
-                {destructViews && (
-                  <div className="pl-6">
-                    <Input
-                      type="number"
-                      placeholder="Number of views"
-                      value={viewsValue}
-                      onChange={handleViewsValueChange}
-                      className="text-sm rounded-md border border-border focus:border-blue-500 focus:ring focus:ring-blue-200 bg-background text-foreground"
-                    />
-                  </div>
-                )}
-
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="destruct-time"
-                    checked={destructTime}
-                    onCheckedChange={(checked) =>
-                      setDestructTime(checked === true)
-                    }
-                    className="border-border data-[state=checked]:bg-blue-600 data-[state=checked]:text-white"
-                  />
-                  <Label
-                    htmlFor="destruct-time"
-                    className="text-sm font-medium text-foreground"
-                  >
-                    After Time
-                  </Label>
-                </div>
-
-                {destructTime && (
-                  <div className="pl-6">
-                    <Input
-                      type="number"
-                      placeholder="Hours"
-                      value={timeValue}
-                      onChange={handleTimeValueChange}
-                      className="text-sm rounded-md border border-border focus:border-blue-500 focus:ring focus:ring-blue-200 bg-background text-foreground"
-                    />
-                  </div>
-                )}
-              </div>
-            )}
           </div>
 
           {/* Generate Button */}
-          <Button
-            onClick={handleGenerateAndContinue}
-            disabled={!canGenerate || loading}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-          >
-            {loading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Generating...
-              </>
-            ) : (
-              "Generate QR Code"
-            )}
-          </Button>
+          <div className="pt-6 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+            <Button
+              onClick={handleGenerateAndContinue}
+              disabled={!canGenerate || loading}
+              className="w-full h-14 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground font-semibold text-lg rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                  Generating QR Code...
+                </>
+              ) : (
+                <>
+                  <Zap className="mr-2 h-5 w-5" />
+                  Generate QR Code
+                </>
+              )}
+            </Button>
+          </div>
         </div>
       </main>
     </div>
