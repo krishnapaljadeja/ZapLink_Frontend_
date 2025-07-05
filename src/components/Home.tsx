@@ -10,8 +10,10 @@ import {
   Zap,
 } from "lucide-react";
 import { cn } from "../lib/utils";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
+  const navigate = useNavigate();
   const contentTypes = [
     {
       id: "pdf",
@@ -90,6 +92,9 @@ export default function Home() {
             {contentTypes.map((type, index) => (
               <button
                 key={type.id}
+                onClick={() =>
+                  navigate("/upload", { state: { type: type.id } })
+                }
                 className={cn(
                   "group relative overflow-hidden rounded-2xl p-6 sm:p-8 transition-all duration-300",
                   "hover:scale-105 hover:shadow-2xl card-hover",

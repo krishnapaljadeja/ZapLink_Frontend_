@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "sonner";
 import { Button } from "./ui/button";
@@ -38,6 +38,7 @@ function getErrorIcon(errorParam: string | null) {
 export default function ViewZap() {
   const { shortId } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
   const [errorType, setErrorType] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -119,6 +120,16 @@ export default function ViewZap() {
     };
     fetchZap();
   }, [shortId, location.search]);
+
+  useEffect(() => {
+    if (passwordRequired) {
+      navigate(location.pathname, {
+        replace: true,
+        state: { ...location.state, passwordRequired: true },
+      });
+    }
+    // eslint-disable-next-line
+  }, [passwordRequired]);
 
   const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
