@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Github, Linkedin, Zap, Heart, Code, Rocket, ArrowRight } from "lucide-react";
+import { Github, Linkedin, Zap, Heart, Code, ArrowRight } from "lucide-react";
 import { Button } from "./ui/button";
 
 export default function AboutUs() {
@@ -56,20 +56,6 @@ export default function AboutUs() {
                   </a>
                 </div>
               </div>
-              <div className="space-y-3">
-                <div className="flex items-center gap-3 text-sm">
-                  <Code className="h-4 w-4 text-primary" />
-                  <span className="text-muted-foreground">
-                    Backend Architecture & API Design
-                  </span>
-                </div>
-                <div className="flex items-center gap-3 text-sm">
-                  <Rocket className="h-4 w-4 text-primary" />
-                  <span className="text-muted-foreground">
-                    Cloud Infrastructure & Security
-                  </span>
-                </div>
-              </div>
             </div>
 
             <div className="feature-card">
@@ -103,20 +89,6 @@ export default function AboutUs() {
                   >
                     <Linkedin className="h-5 w-5 text-muted-foreground group-hover:text-primary" />
                   </a>
-                </div>
-              </div>
-              <div className="space-y-3">
-                <div className="flex items-center gap-3 text-sm">
-                  <Code className="h-4 w-4 text-primary" />
-                  <span className="text-muted-foreground">
-                    Frontend Development & UI/UX
-                  </span>
-                </div>
-                <div className="flex items-center gap-3 text-sm">
-                  <Rocket className="h-4 w-4 text-primary" />
-                  <span className="text-muted-foreground">
-                    QR Code Generation & Customization
-                  </span>
                 </div>
               </div>
             </div>
