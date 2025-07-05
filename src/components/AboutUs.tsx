@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
-import { Github, Linkedin, Zap, Heart, Code } from "lucide-react";
+import { Github, Linkedin, Zap, Heart, Code, Rocket } from "lucide-react";
 import { Button } from "./ui/button";
 
 export default function AboutUs() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-background">
       <main className="container mx-auto px-6 py-16 max-w-6xl">
         <div className="bg-card/50 backdrop-blur-sm rounded-3xl shadow-2xl p-12 space-y-16 border border-border/30">
           <div className="text-center space-y-6">
@@ -21,6 +21,7 @@ export default function AboutUs() {
               secure, and beautiful.
             </p>
           </div>
+
           <div className="grid md:grid-cols-2 gap-12">
             <div
               className="bg-card/30 rounded-2xl p-8 space-y-6 border border-border/30 hover:border-primary/30 transition-all duration-300 hover:shadow-lg"
@@ -58,7 +59,22 @@ export default function AboutUs() {
                   </a>
                 </div>
               </div>
+              <div className="space-y-3">
+                <div className="flex items-center gap-3 text-sm">
+                  <Code className="h-4 w-4 text-primary" />
+                  <span className="text-muted-foreground">
+                    Backend Architecture & API Design
+                  </span>
+                </div>
+                <div className="flex items-center gap-3 text-sm">
+                  <Rocket className="h-4 w-4 text-primary" />
+                  <span className="text-muted-foreground">
+                    Cloud Infrastructure & Security
+                  </span>
+                </div>
+              </div>
             </div>
+
             <div
               className="bg-card/30 rounded-2xl p-8 space-y-6 border border-border/30 hover:border-primary/30 transition-all duration-300 hover:shadow-lg"
               style={{ animationDelay: "0.2s" }}
@@ -93,6 +109,20 @@ export default function AboutUs() {
                   >
                     <Linkedin className="h-5 w-5 text-muted-foreground group-hover:text-primary" />
                   </a>
+                </div>
+              </div>
+              <div className="space-y-3">
+                <div className="flex items-center gap-3 text-sm">
+                  <Code className="h-4 w-4 text-primary" />
+                  <span className="text-muted-foreground">
+                    Frontend Development & UI/UX
+                  </span>
+                </div>
+                <div className="flex items-center gap-3 text-sm">
+                  <Rocket className="h-4 w-4 text-primary" />
+                  <span className="text-muted-foreground">
+                    QR Code Generation & Customization
+                  </span>
                 </div>
               </div>
             </div>

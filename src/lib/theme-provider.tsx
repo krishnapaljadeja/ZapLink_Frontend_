@@ -11,36 +11,24 @@ type ThemeProviderProps = {
 type ThemeProviderState = {
   theme: Theme;
   setTheme: (theme: Theme) => void;
-  themeTransitioning: boolean;
 };
 
 const initialState: ThemeProviderState = {
   theme: "dark",
   setTheme: () => null,
-  themeTransitioning: false,
 };
 
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 
 export function ThemeProvider({
   children,
-  defaultTheme = "light",
+  defaultTheme = "dark",
   storageKey = "zaplink-theme",
   ...props
 }: ThemeProviderProps) {
-  const [theme, setThemeState] = useState<Theme>(
+  const [theme, setTheme] = useState<Theme>(
     () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
   );
-  const [themeTransitioning, setThemeTransitioning] = useState(false);
-
-  const setTheme = (newTheme: Theme) => {
-    setThemeTransitioning(true);
-    setTimeout(() => {
-      localStorage.setItem(storageKey, newTheme);
-      setThemeState(newTheme);
-      setThemeTransitioning(false);
-    }, 250); // 250ms transition
-  };
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -50,8 +38,10 @@ export function ThemeProvider({
 
   const value = {
     theme,
-    setTheme,
-    themeTransitioning,
+    setTheme: (theme: Theme) => {
+      localStorage.setItem(storageKey, theme);
+      setTheme(theme);
+    },
   };
 
   return (

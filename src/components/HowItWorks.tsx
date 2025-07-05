@@ -4,7 +4,7 @@ import { Button } from "./ui/button";
 
 export default function HowItWorks() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-background">
       <main className="container mx-auto px-6 py-16 max-w-6xl">
         <div className="bg-card/50 backdrop-blur-sm rounded-3xl shadow-2xl p-12 space-y-16 border border-border/30">
           <div className="text-center space-y-6">
@@ -124,7 +124,7 @@ export default function HowItWorks() {
 
           {/* Features Grid */}
           <div className="grid md:grid-cols-2 gap-8 pt-8 border-t border-border/30">
-            <div className="space-y-4" style={{ animationDelay: "0.4s" }}>
+            <div style={{ animationDelay: "0.4s" }}>
               <h3 className="text-2xl font-bold text-foreground flex items-center gap-3">
                 <QrCode className="h-6 w-6 text-primary" />
                 Why Choose ZapLink?
@@ -167,7 +167,7 @@ export default function HowItWorks() {
               </ul>
             </div>
 
-            <div className="space-y-4" style={{ animationDelay: "0.5s" }}>
+            <div style={{ animationDelay: "0.5s" }}>
               <h3 className="text-2xl font-bold text-foreground flex items-center gap-3">
                 <Download className="h-6 w-6 text-primary" />
                 Perfect For
@@ -206,10 +206,7 @@ export default function HowItWorks() {
           </div>
 
           <div className="pt-12 border-t border-border/30">
-            <div
-              className="text-center space-y-6"
-              style={{ animationDelay: "0.6s" }}
-            >
+            <div style={{ animationDelay: "0.6s" }}>
               <h3 className="text-3xl font-bold text-foreground">
                 Ready to Create Your First QR Code?
               </h3>

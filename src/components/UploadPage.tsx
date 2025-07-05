@@ -7,6 +7,7 @@ import { Checkbox } from "./ui/checkbox";
 import { Button } from "./ui/button";
 import { toast } from "sonner";
 import axios, { AxiosError } from "axios";
+import { Switch } from "./ui/switch";
 
 type FileType =
   | "image"
@@ -21,14 +22,14 @@ type FileType =
   | "text";
 
 const TYPE_MESSAGES: Record<FileType, string> = {
-  image: "Supports: .jpg, .jpeg, .png, .webp • Max 10MB",
-  pdf: "Supports: .pdf only • Max 10MB",
-  document: "Supports: .doc, .docx, .txt, .rtf • Max 10MB",
-  spreadsheet: "Supports: .xls, .xlsx, .csv • Max 10MB",
-  presentation: "Supports: .ppt, .pptx • Max 10MB",
-  archive: "Supports: .zip, .rar, .7z, .tar, .gz • Max 10MB",
-  audio: "Supports: .mp3, .wav, .ogg, .m4a • Max 10MB",
-  video: "Supports: .mp4, .avi, .mov, .wmv, .flv • Max 100MB",
+  image: "Supports: .jpg, .jpeg, .png, .webp",
+  pdf: "Supports: .pdf only",
+  document: "Supports: .doc, .docx, .txt, .rtf",
+  spreadsheet: "Supports: .xls, .xlsx, .csv",
+  presentation: "Supports: .ppt, .pptx",
+  archive: "Supports: .zip, .rar, .7z, .tar, .gz",
+  audio: "Supports: .mp3, .wav, .ogg, .m4a",
+  video: "Supports: .mp4, .avi, .mov, .wmv, .flv",
   url: "Enter a valid http:// or https:// link",
   text: "Enter text content",
 };
@@ -46,10 +47,51 @@ const TYPE_EXTENSIONS: Record<FileType, string[]> = {
   text: [],
 };
 
-const MAX_FILE_SIZE = {
-  video: 100 * 1024 * 1024, // 100MB
-  default: 10 * 1024 * 1024, // 10MB
-};
+// Add a type for the form data hash function
+interface FormDataHash {
+  qrName: string;
+  uploadedFile: File | null;
+  passwordProtect: boolean;
+  password: string;
+  selfDestruct: boolean;
+  destructViews: boolean;
+  destructTime: boolean;
+  viewsValue: string;
+  timeValue: string;
+  urlValue: string;
+  textValue: string;
+  type: string;
+}
+
+function getFormDataHash({
+  qrName,
+  uploadedFile,
+  passwordProtect,
+  password,
+  selfDestruct,
+  destructViews,
+  destructTime,
+  viewsValue,
+  timeValue,
+  urlValue,
+  textValue,
+  type,
+}: FormDataHash) {
+  return JSON.stringify({
+    qrName,
+    fileName: uploadedFile?.name || null,
+    passwordProtect,
+    password,
+    selfDestruct,
+    destructViews,
+    destructTime,
+    viewsValue,
+    timeValue,
+    urlValue,
+    textValue,
+    type,
+  });
+}
 
 export default function UploadPage() {
   const location = useLocation();
@@ -75,18 +117,18 @@ export default function UploadPage() {
     () => sessionStorage.getItem("timeValue") || ""
   );
   const [loading, setLoading] = useState(false);
-  const [type] = useState<FileType>(initialType);
+  const [type, setType] = useState<FileType>(initialType);
   const [urlValue, setUrlValue] = useState("");
   const [textValue, setTextValue] = useState("");
   const [compressPdf, setCompressPdf] = useState(false);
-
-  // Focus on name input when component mounts
-  useEffect(() => {
-    const nameInput = document.getElementById("qr-name");
-    if (nameInput) {
-      nameInput.focus();
-    }
-  }, []);
+  const [lastQR, setLastQR] = useState(() => {
+    const data = sessionStorage.getItem("lastQR");
+    return data ? JSON.parse(data) : null;
+  });
+  const [lastQRFormHash, setLastQRFormHash] = useState(() => {
+    const data = sessionStorage.getItem("lastQRFormHash");
+    return data || null;
+  });
 
   // Persist state to sessionStorage
   useEffect(() => {
@@ -125,112 +167,27 @@ export default function UploadPage() {
     sessionStorage.setItem("timeValue", timeValue);
   }, [timeValue]);
 
-  const handlePasswordProtectChange = (checked: boolean | "indeterminate") => {
-    setPasswordProtect(checked === true);
-  };
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
-  const handleSelfDestructChange = (checked: boolean | "indeterminate") => {
-    setSelfDestruct(checked === true);
-  };
-
-  const handleViewsValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    if (value === "" || !isNaN(Number(value))) {
-      setViewsValue(value);
-    }
-  };
-
-  const handleTimeValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    if (value === "" || !isNaN(Number(value))) {
-      setTimeValue(value);
-    }
-  };
-
-  const validateFileType = (file: File) => {
-    if (
-      type === "url" ||
-      type === "text" ||
-      type === "document" ||
-      type === "presentation"
-    )
-      return true;
-    const ext = file.name.toLowerCase().slice(file.name.lastIndexOf("."));
-    const allowed = TYPE_EXTENSIONS[type] || [];
-    return allowed.length === 0 || allowed.includes(ext);
-  };
-
-  const validateFileSize = (file: File) => {
-    const maxSize = type === "video" ? MAX_FILE_SIZE.video : MAX_FILE_SIZE.default;
-    return file.size <= maxSize;
-  };
-
-  const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return "0 Bytes";
-    const k = 1024;
-    const sizes = ["Bytes", "KB", "MB", "GB"];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    
-    if (type === "text") {
-      toast.error(
-        "Text type does not require file upload. Please use the text input below."
-      );
-      e.target.value = "";
-      return;
-    }
-    
-    if (type === "document" || type === "presentation") {
-      // Allow these types to proceed with file upload
-    } else if (!validateFileType(file)) {
-      toast.error(TYPE_MESSAGES[type] || "Invalid file type.");
-      e.target.value = "";
-      return;
-    }
-
-    if (!validateFileSize(file)) {
-      const maxSize = type === "video" ? "100MB" : "10MB";
-      toast.error(`File size exceeds ${maxSize} limit. Current size: ${formatFileSize(file.size)}`);
-      e.target.value = "";
-      return;
-    }
-    
-    setUploadedFile(file);
-    setQrName(qrName ? qrName : file.name);
-    toast.success(`File "${file.name}" selected successfully!`);
-  };
-
-  const handleRemoveFile = () => {
+  // Reset form state when file type changes
+  useEffect(() => {
+    setQrName("");
     setUploadedFile(null);
-    const fileInput = document.getElementById("file") as HTMLInputElement;
-    if (fileInput) {
-      fileInput.value = "";
-    }
-    toast.info("File removed");
-  };
+    setPasswordProtect(false);
+    setPassword("");
+    setSelfDestruct(false);
+    setDestructViews(false);
+    setDestructTime(false);
+    setViewsValue("");
+    setTimeValue("");
+    setUrlValue("");
+    setTextValue("");
+    setCompressPdf(false);
+  }, [type]);
 
-  const handleQrNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setQrName(value);
-  };
-
-  const canGenerate =
-    qrName.trim() &&
-    (type === "url"
-      ? urlValue.trim()
-      : type === "text"
-      ? textValue.trim()
-      : uploadedFile) &&
-    (!passwordProtect || password.trim()) &&
-    (!selfDestruct ||
-      (destructViews && viewsValue.trim()) ||
-      (destructTime && timeValue.trim()));
-
+  // After successful QR generation, store QR and form hash
   const handleGenerateAndContinue = async () => {
     if (type === "url") {
       if (!urlValue || !/^https?:\/\//.test(urlValue)) {
@@ -269,6 +226,25 @@ export default function UploadPage() {
           formData
         );
         const { data } = response.data;
+
+        const formHash = getFormDataHash({
+          qrName,
+          uploadedFile,
+          passwordProtect,
+          password,
+          selfDestruct,
+          destructViews,
+          destructTime,
+          viewsValue,
+          timeValue,
+          urlValue,
+          textValue,
+          type,
+        });
+        sessionStorage.setItem("lastQR", JSON.stringify({ ...data }));
+        sessionStorage.setItem("lastQRFormHash", formHash);
+        setLastQR({ ...data });
+        setLastQRFormHash(formHash);
 
         navigate("/customize", {
           state: {
@@ -328,6 +304,25 @@ export default function UploadPage() {
         );
         const { data } = response.data;
 
+        const formHash = getFormDataHash({
+          qrName,
+          uploadedFile,
+          passwordProtect,
+          password,
+          selfDestruct,
+          destructViews,
+          destructTime,
+          viewsValue,
+          timeValue,
+          urlValue,
+          textValue,
+          type,
+        });
+        sessionStorage.setItem("lastQR", JSON.stringify({ ...data }));
+        sessionStorage.setItem("lastQRFormHash", formHash);
+        setLastQR({ ...data });
+        setLastQRFormHash(formHash);
+
         navigate("/customize", {
           state: {
             zapId: data.zapId,
@@ -353,13 +348,6 @@ export default function UploadPage() {
       return;
     }
 
-    if (type === "pdf" && compressPdf && uploadedFile) {
-      // Simulate compression (in real app, use a PDF compression lib)
-      toast.info("Compressing PDF (simulated)...");
-      await new Promise((res) => setTimeout(res, 1200));
-      // Optionally, you could reduce the file size here if using a real compressor
-    }
-
     const formData = new FormData();
     formData.append("file", uploadedFile);
     formData.append("name", qrName);
@@ -380,9 +368,6 @@ export default function UploadPage() {
         formData.append("expiresAt", expirationTime.toISOString());
       }
     }
-    if (type === "pdf" && compressPdf) {
-      formData.append("compress", "true");
-    }
 
     try {
       setLoading(true);
@@ -391,6 +376,25 @@ export default function UploadPage() {
         formData
       );
       const { data } = response.data;
+
+      const formHash = getFormDataHash({
+        qrName,
+        uploadedFile,
+        passwordProtect,
+        password,
+        selfDestruct,
+        destructViews,
+        destructTime,
+        viewsValue,
+        timeValue,
+        urlValue,
+        textValue,
+        type,
+      });
+      sessionStorage.setItem("lastQR", JSON.stringify({ ...data }));
+      sessionStorage.setItem("lastQRFormHash", formHash);
+      setLastQR({ ...data });
+      setLastQRFormHash(formHash);
 
       navigate("/customize", {
         state: {
@@ -411,9 +415,184 @@ export default function UploadPage() {
     }
   };
 
+  // On form input change, clear lastQR if form hash changes
+  useEffect(() => {
+    const formHash = getFormDataHash({
+      qrName,
+      uploadedFile,
+      passwordProtect,
+      password,
+      selfDestruct,
+      destructViews,
+      destructTime,
+      viewsValue,
+      timeValue,
+      urlValue,
+      textValue,
+      type,
+    });
+    if (lastQRFormHash && formHash !== lastQRFormHash) {
+      sessionStorage.removeItem("lastQR");
+      sessionStorage.removeItem("lastQRFormHash");
+      setLastQR(null);
+      setLastQRFormHash(null);
+    }
+  }, [
+    qrName,
+    uploadedFile,
+    passwordProtect,
+    password,
+    selfDestruct,
+    destructViews,
+    destructTime,
+    viewsValue,
+    timeValue,
+    urlValue,
+    textValue,
+    type,
+  ]);
+
+  const handlePasswordProtectChange = (checked: boolean | "indeterminate") => {
+    setPasswordProtect(checked === true);
+  };
+
+  const handleSelfDestructChange = (checked: boolean | "indeterminate") => {
+    setSelfDestruct(checked === true);
+  };
+
+  const handleViewsValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value === "" || !isNaN(Number(value))) {
+      setViewsValue(value);
+    }
+  };
+
+  const handleTimeValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value === "" || !isNaN(Number(value))) {
+      setTimeValue(value);
+    }
+  };
+
+  // Add file size constraints
+  const MAX_SIZE_MB = type === "video" ? 100 : 10;
+  const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024;
+
+  const validateFileType = (file: File) => {
+    if (
+      type === "url" ||
+      type === "text" ||
+      type === "document" ||
+      type === "presentation"
+    )
+      return true;
+    const ext = file.name.toLowerCase().slice(file.name.lastIndexOf("."));
+    const allowed = TYPE_EXTENSIONS[type] || [];
+    return allowed.length === 0 || allowed.includes(ext);
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > MAX_SIZE_BYTES) {
+      toast.error(
+        `${
+          type.charAt(0).toUpperCase() + type.slice(1)
+        } files must be ≤${MAX_SIZE_MB}MB.`
+      );
+      e.target.value = "";
+      return;
+    }
+    if (type === "pdf" && compressPdf) {
+      // Placeholder: compress PDF client-side
+      // const compressed = await compressPDF(file, 10 * 1024 * 1024);
+      // setUploadedFile(compressed);
+      toast.info(
+        "PDF compression is not yet implemented. Uploading original file."
+      );
+      setUploadedFile(file);
+      return;
+    }
+    if (type === "text") {
+      toast.error(
+        "Text type does not require file upload. Please use the text input below."
+      );
+      e.target.value = "";
+      return;
+    }
+    if (type === "document" || type === "presentation") {
+      // Allow these types to proceed with file upload
+    } else if (!validateFileType(file)) {
+      toast.error(TYPE_MESSAGES[type] || "Invalid file type.");
+      e.target.value = "";
+      return;
+    }
+    setUploadedFile(file);
+    setQrName(qrName ? qrName : file.name);
+    toast.success(`File "${file.name}" selected successfully!`);
+  };
+
+  const handleRemoveFile = () => {
+    setUploadedFile(null);
+    const fileInput = document.getElementById("file") as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = "";
+    }
+    toast.info("File removed");
+  };
+
+  const handleQrNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setQrName(value);
+  };
+
+  const canGenerate =
+    qrName.trim() &&
+    (type === "url"
+      ? urlValue.trim()
+      : type === "text"
+      ? textValue.trim()
+      : uploadedFile) &&
+    (!passwordProtect || password.trim()) &&
+    (!selfDestruct ||
+      (destructViews && viewsValue.trim()) ||
+      (destructTime && timeValue.trim()));
+
+  // Add this useEffect after state declarations
+  useEffect(() => {
+    if (lastQR && lastQRFormHash) {
+      // Only prefill if form is at initial state (e.g., no file, no name, etc)
+      const isInitial =
+        !qrName &&
+        !uploadedFile &&
+        !passwordProtect &&
+        !password &&
+        !selfDestruct &&
+        !destructViews &&
+        !destructTime &&
+        !viewsValue &&
+        !timeValue &&
+        !urlValue &&
+        !textValue;
+      if (isInitial) {
+        setQrName(lastQR.name || "");
+        setPasswordProtect(!!lastQR.password);
+        setPassword(lastQR.password || "");
+        setSelfDestruct(!!lastQR.selfDestruct);
+        setDestructViews(!!lastQR.viewLimit);
+        setDestructTime(!!lastQR.expiresAt);
+        setViewsValue(lastQR.viewLimit ? String(lastQR.viewLimit) : "");
+        setTimeValue(lastQR.expiresAt ? String(lastQR.expiresAt) : "");
+        setUrlValue(lastQR.originalUrl || "");
+        setTextValue(lastQR.textContent || "");
+        setType(lastQR.type ? lastQR.type.toLowerCase() : type);
+        // Note: File cannot be restored for security reasons, user must reselect if needed
+      }
+    }
+  }, []);
+
   return (
-    <div className="min-h-screen">
-      {/* Remove local header/navbar, now handled globally */}
+    <div className="min-h-screen flex flex-col bg-background">
       <main className="container mx-auto px-4 sm:px-6 py-8 sm:py-12 max-w-3xl">
         <div className="bg-card/50 backdrop-blur-sm rounded-3xl shadow-2xl p-6 sm:p-10 space-y-8 sm:space-y-10 border border-border/30">
           {/* Step Indicator */}
@@ -431,10 +610,7 @@ export default function UploadPage() {
           </div>
 
           {/* QR Code Name */}
-          <div
-            className="space-y-3 sm:space-y-4"
-            style={{ animationDelay: "0.1s" }}
-          >
+          <div className="space-y-3 sm:space-y-4">
             <Label className="text-base sm:text-lg font-semibold text-foreground flex items-center gap-2">
               <span className="w-2 h-2 sm:w-3 sm:h-3 bg-primary rounded-full"></span>
               Name your QR Code
@@ -450,10 +626,7 @@ export default function UploadPage() {
 
           {/* File Upload */}
           {type === "url" ? (
-            <div
-              className="space-y-3 sm:space-y-4"
-              style={{ animationDelay: "0.2s" }}
-            >
+            <div className="space-y-3 sm:space-y-4">
               <Label
                 htmlFor="url"
                 className="text-base sm:text-lg font-semibold text-foreground flex items-center gap-2"
@@ -474,10 +647,7 @@ export default function UploadPage() {
               </p>
             </div>
           ) : type === "text" ? (
-            <div
-              className="space-y-3 sm:space-y-4"
-              style={{ animationDelay: "0.2s" }}
-            >
+            <div className="space-y-3 sm:space-y-4">
               <Label
                 htmlFor="text"
                 className="text-base sm:text-lg font-semibold text-foreground flex items-center gap-2"
@@ -504,10 +674,7 @@ export default function UploadPage() {
               </div>
             </div>
           ) : (
-            <div
-              className="space-y-4 sm:space-y-6"
-              style={{ animationDelay: "0.2s" }}
-            >
+            <div className="space-y-4 sm:space-y-6">
               <div className="space-y-3 sm:space-y-4">
                 <Label
                   htmlFor="file"
@@ -525,58 +692,30 @@ export default function UploadPage() {
                     className="cursor-pointer h-12 sm:h-14 rounded-xl border-border/50 bg-background/50 backdrop-blur-sm file:mr-4 file:py-2 sm:file:py-3 file:px-4 sm:file:px-6 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90 transition-all duration-200"
                   />
                 </div>
-                {/* Max file size info */}
-                <p className="text-xs text-muted-foreground pl-4 sm:pl-6">
-                  {type === "video"
-                    ? "Max file size: 100MB"
-                    : "Max file size: 10MB"}
-                </p>
-                <p className="text-sm text-muted-foreground pl-4 sm:pl-6">
-                  {TYPE_MESSAGES[type]}
-                </p>
-                {/* PDF Compression Option */}
-                {type === "pdf" && (
-                  <div className="flex items-center gap-2 pl-4 sm:pl-6">
-                    <input
-                      type="checkbox"
-                      id="compress-pdf"
-                      checked={compressPdf}
-                      onChange={(e) => setCompressPdf(e.target.checked)}
-                      className="accent-primary h-4 w-4 rounded"
-                    />
-                    <label
-                      htmlFor="compress-pdf"
-                      className="text-sm text-foreground cursor-pointer"
-                    >
-                      Compress PDF before uploading
-                    </label>
-                  </div>
-                )}
               </div>
 
-              {/* PDF Compression Option */}
+              <div className="mt-2 text-xs text-muted-foreground">
+                {TYPE_MESSAGES[type]}
+              </div>
+              <div className="text-[11px] text-muted-foreground mb-2">
+                Max size: {type === "video" ? "100MB" : "10MB"}
+              </div>
+
               {type === "pdf" && (
-                <div className="flex items-center space-x-3 sm:space-x-4 p-4 sm:p-6 rounded-xl bg-card/30 border border-border/30 hover:border-primary/30 transition-all duration-200">
-                  <Checkbox
+                <div className="flex items-center gap-2 mb-2">
+                  <Switch
                     id="compress-pdf"
                     checked={compressPdf}
-                    onCheckedChange={(checked) => setCompressPdf(checked === true)}
-                    className="data-[state=checked]:bg-primary data-[state=checked]:border-primary w-4 h-4 sm:w-5 sm:h-5"
+                    onCheckedChange={setCompressPdf}
                   />
-                  <Label
-                    htmlFor="compress-pdf"
-                    className="text-sm sm:text-base font-medium text-foreground cursor-pointer flex items-center gap-2 sm:gap-3"
-                  >
-                    <svg className="h-4 w-4 sm:h-5 sm:w-5 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-                    </svg>
-                    Compress PDF before uploading
-                  </Label>
+                  <label htmlFor="compress-pdf" className="text-sm">
+                    Compress PDF before upload
+                  </label>
                 </div>
               )}
 
               {uploadedFile && (
-                <div className="p-4 sm:p-6 border border-border/50 rounded-xl bg-card/30 backdrop-blur-sm">
+                <div className="p-4 sm:p-6 border border-border/50 rounded-xl bg-card/30 backdrop-blur-sm animate-scale-in">
                   <div className="flex items-center gap-3 sm:gap-4">
                     <div className="p-2 sm:p-3 bg-primary/10 rounded-xl">
                       <Upload className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
@@ -586,7 +725,7 @@ export default function UploadPage() {
                         {uploadedFile.name}
                       </p>
                       <p className="text-sm text-muted-foreground">
-                        {formatFileSize(uploadedFile.size)}
+                        {(uploadedFile.size / 1024).toFixed(2)} KB
                       </p>
                     </div>
                     <button
@@ -603,10 +742,7 @@ export default function UploadPage() {
           )}
 
           {/* Security Options */}
-          <div
-            className="space-y-6 sm:space-y-8"
-            style={{ animationDelay: "0.3s" }}
-          >
+          <div className="space-y-6 sm:space-y-8">
             <h3 className="text-xl sm:text-2xl font-semibold text-foreground flex items-center gap-2 sm:gap-3">
               <Shield className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
               Security Options
@@ -630,7 +766,7 @@ export default function UploadPage() {
               </div>
 
               {passwordProtect && (
-                <div className="pl-6 sm:pl-10">
+                <div className="pl-6 sm:pl-10 animate-scale-in">
                   <Input
                     type="password"
                     placeholder="Enter a secure password..."
@@ -658,7 +794,7 @@ export default function UploadPage() {
               </div>
 
               {selfDestruct && (
-                <div className="pl-6 sm:pl-10 space-y-4 sm:space-y-6">
+                <div className="pl-6 sm:pl-10 space-y-4 sm:space-y-6 animate-scale-in">
                   <div className="flex items-center space-x-3 sm:space-x-4 p-3 sm:p-4 rounded-xl bg-card/20 border border-border/20">
                     <Checkbox
                       id="destruct-views"
@@ -678,7 +814,7 @@ export default function UploadPage() {
                   </div>
 
                   {destructViews && (
-                    <div className="pl-6 sm:pl-8">
+                    <div className="pl-6 sm:pl-8 animate-scale-in">
                       <Input
                         type="number"
                         placeholder="Number of views"
@@ -708,7 +844,7 @@ export default function UploadPage() {
                   </div>
 
                   {destructTime && (
-                    <div className="pl-6 sm:pl-8">
+                    <div className="pl-6 sm:pl-8 animate-scale-in">
                       <Input
                         type="number"
                         placeholder="Hours until expiration"
@@ -724,7 +860,7 @@ export default function UploadPage() {
           </div>
 
           {/* Generate Button */}
-          <div className="pt-6 sm:pt-8" style={{ animationDelay: "0.4s" }}>
+          <div className="pt-6 sm:pt-8">
             <Button
               onClick={handleGenerateAndContinue}
               disabled={!canGenerate || loading}
@@ -743,6 +879,33 @@ export default function UploadPage() {
               )}
             </Button>
           </div>
+
+          {/* Continue to QR Button */}
+          {lastQR &&
+            lastQRFormHash ===
+              getFormDataHash({
+                qrName,
+                uploadedFile,
+                passwordProtect,
+                password,
+                selfDestruct,
+                destructViews,
+                destructTime,
+                viewsValue,
+                timeValue,
+                urlValue,
+                textValue,
+                type,
+              }) && (
+              <div className="w-full flex justify-center mb-4">
+                <Button
+                  className="w-full max-w-md"
+                  onClick={() => navigate("/customize", { state: lastQR })}
+                >
+                  Continue to QR
+                </Button>
+              </div>
+            )}
         </div>
       </main>
     </div>

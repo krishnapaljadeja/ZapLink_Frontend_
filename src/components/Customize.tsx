@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
   ArrowLeft,
   Upload,
@@ -40,7 +40,6 @@ type CustomizePageState = {
 
 export default function CustomizePage() {
   const location = useLocation();
-  const navigate = useNavigate();
   const state = (location.state as CustomizePageState) || null;
   const qrRef = useRef<HTMLDivElement>(null);
 
@@ -155,29 +154,10 @@ export default function CustomizePage() {
     }
   };
 
-  // Back button handler
-  const handleBack = () => {
-    if (state?.type) {
-      navigate("/upload", { state: { type: state.type.toLowerCase() } });
-    } else {
-      navigate("/upload");
-    }
-  };
-
   return (
     <div className="min-h-screen bg-background page-enter">
-      {/* Header */}
-      <header className="glass-nav sticky top-0 z-50">
-        <div className="container mx-auto px-4 sm:px-6 py-4 flex items-center gap-4">
-          <Link
-            to="/"
-            className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-all duration-200 hover:scale-105"
-          >
-            <ArrowLeft className="h-5 w-5" />
-            Back
-          </Button>
-        </div>
-        <div className="bg-card/50 backdrop-blur-sm rounded-3xl shadow-2xl p-6 sm:p-8 space-y-8 border border-border/30">
+      <main className="container mx-auto px-4 sm:px-6 py-8 sm:py-12 max-w-6xl">
+        <div className="bg-card/50 backdrop-blur-sm rounded-3xl shadow-2xl p-6 sm:p-8 space-y-8 border border-border/30 animate-fade-in-up">
           {/* Step Indicator */}
           <div className="flex items-center justify-between mb-8">
             <span className="text-xs sm:text-sm text-primary font-semibold bg-primary/10 px-3 py-1 rounded-full">
@@ -195,7 +175,7 @@ export default function CustomizePage() {
           {/* Two-column layout: Preview on left, Controls on right */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
             {/* QR Preview Card */}
-            <div className="flex flex-col items-center justify-center order-2 lg:order-1">
+            <div className="flex flex-col items-center justify-center animate-scale-in order-2 lg:order-1">
               <div className="bg-gradient-to-br from-card to-card/50 p-6 sm:p-8 rounded-3xl border border-border/50 shadow-2xl backdrop-blur-sm">
                 <div
                   ref={qrRef}
@@ -223,7 +203,10 @@ export default function CustomizePage() {
             </div>
 
             {/* Customization Controls */}
-            <div className="space-y-6 order-1 lg:order-2">
+            <div
+              className="space-y-6 animate-slide-in-left order-1 lg:order-2"
+              style={{ animationDelay: "0.2s" }}
+            >
               <div className="flex items-center gap-3 mb-6">
                 <div className="p-2 bg-primary/10 rounded-lg">
                   <Palette className="h-5 w-5 text-primary" />
@@ -379,6 +362,18 @@ export default function CustomizePage() {
                 </div>
               </div>
             </div>
+          </div>
+
+          {/* Back Button */}
+          <div className="mt-8">
+            <Link
+              to="/upload"
+              state={{ type: state?.type?.toLowerCase() || "pdf" }}
+              className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-all duration-200 hover:scale-105"
+            >
+              <ArrowLeft className="h-5 w-5" />
+              <span className="hidden sm:inline">Back</span>
+            </Link>
           </div>
         </div>
       </main>

@@ -1,25 +1,9 @@
-import { Link, useLocation } from "react-router-dom";
-import { Zap } from "lucide-react";
-import { Button } from "./ui/button";
-import { useState } from "react";
+import { Link} from "react-router-dom";
 import { ThemeToggle } from "./ThemeToggle";
+import { Zap } from "lucide-react";
 
 export default function Navbar() {
-  const location = useLocation();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  // Determine which links to show based on route
-  const isHome = location.pathname === "/";
-  const isHowItWorks = location.pathname === "/how-it-works";
-  const isAbout = location.pathname === "/about";
-  const isShortener = location.pathname === "/shorten";
-
-  const navLinkClass = (active: boolean) =>
-    `text-sm font-medium transition-all duration-200 relative group px-2 py-1 ${
-      active
-        ? "text-primary after:absolute after:left-0 after:bottom-0 after:w-full after:h-0.5 after:bg-primary after:rounded-full after:transition-all after:duration-300"
-        : "text-muted-foreground hover:text-foreground after:absolute after:left-0 after:bottom-0 after:w-0 after:h-0.5 after:bg-primary after:rounded-full group-hover:after:w-full after:transition-all after:duration-300"
-    }`;
+//   const location = useLocation();
 
   return (
     <header className="glass-nav sticky top-0 z-50">
@@ -38,93 +22,40 @@ export default function Navbar() {
             ZapLink
           </span>
         </Link>
-        {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-8">
-          <Link to="/" className={navLinkClass(isHome)}>
+          <Link
+            to="/"
+            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-all duration-200 hover:scale-105 relative group"
+          >
             Home
+            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
           </Link>
-          <Link to="/how-it-works" className={navLinkClass(isHowItWorks)}>
+          <Link
+            to="/how-it-works"
+            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-all duration-200 hover:scale-105 relative group"
+          >
             How it Works
+            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
           </Link>
-          <Link to="/about" className={navLinkClass(isAbout)}>
+          <Link
+            to="/about"
+            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-all duration-200 hover:scale-105 relative group"
+          >
             About Us
+            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
           </Link>
-          <Link to="/shorten" className={navLinkClass(isShortener)}>
+          {/* Comment out the URL Shortener nav link
+          <Link
+            to="/url-shortener"
+            className={`text-sm font-medium text-muted-foreground hover:text-foreground transition-all duration-200 hover:scale-105 relative group ${path === "/url-shortener" ? "text-primary pointer-events-none" : ""}`}
+          >
             URL Shortener
+            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
           </Link>
+          */}
           <ThemeToggle />
         </nav>
-        {/* Mobile Menu Button */}
-        <div className="md:hidden flex items-center gap-2">
-          <ThemeToggle />
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="h-9 w-9 rounded-xl bg-muted/50 hover:bg-muted/80 transition-all duration-300"
-          >
-            <span className="sr-only">Toggle menu</span>
-            <svg
-              className="h-5 w-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              {mobileMenuOpen ? (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              ) : (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              )}
-            </svg>
-          </Button>
-        </div>
       </div>
-      {/* Mobile Menu */}
-      {mobileMenuOpen && (
-        <div className="md:hidden border-t border-border/50 bg-card/90 backdrop-blur-sm">
-          <div className="container mx-auto px-4 py-4 space-y-4">
-            <Link
-              to="/"
-              className={navLinkClass(isHome)}
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Home
-            </Link>
-            <Link
-              to="/how-it-works"
-              className={navLinkClass(isHowItWorks)}
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              How it Works
-            </Link>
-            <Link
-              to="/about"
-              className={navLinkClass(isAbout)}
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              About Us
-            </Link>
-            <Link
-              to="/shorten"
-              className={navLinkClass(isShortener)}
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              URL Shortener
-            </Link>
-          </div>
-        </div>
-      )}
     </header>
   );
 }
