@@ -150,7 +150,7 @@ export default function CustomizePage() {
       <header className="glass-nav sticky top-0 z-50">
         <div className="container mx-auto px-4 sm:px-6 py-4 flex items-center gap-4">
           <Link
-            to="/upload"
+            to="/"
             className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-all duration-200 hover:scale-105"
           >
             <ArrowLeft className="h-5 w-5" />

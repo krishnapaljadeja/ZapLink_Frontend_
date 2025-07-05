@@ -37,6 +37,8 @@ export default function Home() {
   ];
 
   const handleOptionClick = (typeId: string) => {
+    // Clear any existing session storage when switching types
+    sessionStorage.clear();
     navigate("/upload", { state: { type: typeId } });
   };
 
@@ -62,6 +64,13 @@ export default function Home() {
           
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
+            <Link
+              to="/url-shortener"
+              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-all duration-200 hover:scale-105 relative group"
+            >
+              URL Shortener
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+            </Link>
             <Link
               to="/how-it-works"
               className="text-sm font-medium text-muted-foreground hover:text-foreground transition-all duration-200 hover:scale-105 relative group"
@@ -121,6 +130,13 @@ export default function Home() {
         {mobileMenuOpen && (
           <div className="md:hidden border-t border-border/50 bg-card/90 backdrop-blur-sm">
             <div className="container mx-auto px-4 py-4 space-y-4">
+              <Link
+                to="/url-shortener"
+                className="block text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                URL Shortener
+              </Link>
               <Link
                 to="/how-it-works"
                 className="block text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
