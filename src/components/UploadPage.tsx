@@ -21,14 +21,14 @@ type FileType =
   | "text";
 
 const TYPE_MESSAGES: Record<FileType, string> = {
-  image: "Supports: .jpg, .jpeg, .png, .webp",
-  pdf: "Supports: .pdf only",
-  document: "Supports: .doc, .docx, .txt, .rtf",
-  spreadsheet: "Supports: .xls, .xlsx, .csv",
-  presentation: "Supports: .ppt, .pptx",
-  archive: "Supports: .zip, .rar, .7z, .tar, .gz",
-  audio: "Supports: .mp3, .wav, .ogg, .m4a",
-  video: "Supports: .mp4, .avi, .mov, .wmv, .flv",
+  image: "Supports: .jpg, .jpeg, .png, .webp • Max 10MB",
+  pdf: "Supports: .pdf only • Max 10MB",
+  document: "Supports: .doc, .docx, .txt, .rtf • Max 10MB",
+  spreadsheet: "Supports: .xls, .xlsx, .csv • Max 10MB",
+  presentation: "Supports: .ppt, .pptx • Max 10MB",
+  archive: "Supports: .zip, .rar, .7z, .tar, .gz • Max 10MB",
+  audio: "Supports: .mp3, .wav, .ogg, .m4a • Max 10MB",
+  video: "Supports: .mp4, .avi, .mov, .wmv, .flv • Max 100MB",
   url: "Enter a valid http:// or https:// link",
   text: "Enter text content",
 };
@@ -46,18 +46,9 @@ const TYPE_EXTENSIONS: Record<FileType, string[]> = {
   text: [],
 };
 
-// File size limits (in bytes)
-const MAX_SIZE: Record<FileType, number> = {
-  pdf: 10 * 1024 * 1024,
-  document: 10 * 1024 * 1024,
-  presentation: 10 * 1024 * 1024,
-  audio: 10 * 1024 * 1024,
-  image: 10 * 1024 * 1024,
-  video: 100 * 1024 * 1024,
-  spreadsheet: 10 * 1024 * 1024,
-  archive: 10 * 1024 * 1024,
-  url: 0,
-  text: 0,
+const MAX_FILE_SIZE = {
+  video: 100 * 1024 * 1024, // 100MB
+  default: 10 * 1024 * 1024, // 10MB
 };
 
 export default function UploadPage() {
@@ -89,21 +80,13 @@ export default function UploadPage() {
   const [textValue, setTextValue] = useState("");
   const [compressPdf, setCompressPdf] = useState(false);
 
-  // Reset state when QR type changes
+  // Focus on name input when component mounts
   useEffect(() => {
-    setQrName("");
-    setUploadedFile(null);
-    setPassword("");
-    setPasswordProtect(false);
-    setSelfDestruct(false);
-    setDestructViews(false);
-    setDestructTime(false);
-    setViewsValue("");
-    setTimeValue("");
-    setUrlValue("");
-    setTextValue("");
-    setCompressPdf(false);
-  }, [initialType]);
+    const nameInput = document.getElementById("qr-name");
+    if (nameInput) {
+      nameInput.focus();
+    }
+  }, []);
 
   // Persist state to sessionStorage
   useEffect(() => {
@@ -177,9 +160,23 @@ export default function UploadPage() {
     return allowed.length === 0 || allowed.includes(ext);
   };
 
+  const validateFileSize = (file: File) => {
+    const maxSize = type === "video" ? MAX_FILE_SIZE.video : MAX_FILE_SIZE.default;
+    return file.size <= maxSize;
+  };
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes === 0) return "0 Bytes";
+    const k = 1024;
+    const sizes = ["Bytes", "KB", "MB", "GB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+  };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    
     if (type === "text") {
       toast.error(
         "Text type does not require file upload. Please use the text input below."
@@ -187,6 +184,7 @@ export default function UploadPage() {
       e.target.value = "";
       return;
     }
+    
     if (type === "document" || type === "presentation") {
       // Allow these types to proceed with file upload
     } else if (!validateFileType(file)) {
@@ -194,17 +192,14 @@ export default function UploadPage() {
       e.target.value = "";
       return;
     }
-    // File size check
-    const maxSize = MAX_SIZE[type] || 10 * 1024 * 1024;
-    if (file.size > maxSize) {
-      toast.error(
-        `File too large. Max size for ${
-          type === "video" ? "video" : "this type"
-        } is ${type === "video" ? "100MB" : "10MB"}.`
-      );
+
+    if (!validateFileSize(file)) {
+      const maxSize = type === "video" ? "100MB" : "10MB";
+      toast.error(`File size exceeds ${maxSize} limit. Current size: ${formatFileSize(file.size)}`);
       e.target.value = "";
       return;
     }
+    
     setUploadedFile(file);
     setQrName(qrName ? qrName : file.name);
     toast.success(`File "${file.name}" selected successfully!`);
@@ -385,6 +380,9 @@ export default function UploadPage() {
         formData.append("expiresAt", expirationTime.toISOString());
       }
     }
+    if (type === "pdf" && compressPdf) {
+      formData.append("compress", "true");
+    }
 
     try {
       setLoading(true);
@@ -556,6 +554,27 @@ export default function UploadPage() {
                 )}
               </div>
 
+              {/* PDF Compression Option */}
+              {type === "pdf" && (
+                <div className="flex items-center space-x-3 sm:space-x-4 p-4 sm:p-6 rounded-xl bg-card/30 border border-border/30 hover:border-primary/30 transition-all duration-200">
+                  <Checkbox
+                    id="compress-pdf"
+                    checked={compressPdf}
+                    onCheckedChange={(checked) => setCompressPdf(checked === true)}
+                    className="data-[state=checked]:bg-primary data-[state=checked]:border-primary w-4 h-4 sm:w-5 sm:h-5"
+                  />
+                  <Label
+                    htmlFor="compress-pdf"
+                    className="text-sm sm:text-base font-medium text-foreground cursor-pointer flex items-center gap-2 sm:gap-3"
+                  >
+                    <svg className="h-4 w-4 sm:h-5 sm:w-5 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                    </svg>
+                    Compress PDF before uploading
+                  </Label>
+                </div>
+              )}
+
               {uploadedFile && (
                 <div className="p-4 sm:p-6 border border-border/50 rounded-xl bg-card/30 backdrop-blur-sm">
                   <div className="flex items-center gap-3 sm:gap-4">
@@ -567,7 +586,7 @@ export default function UploadPage() {
                         {uploadedFile.name}
                       </p>
                       <p className="text-sm text-muted-foreground">
-                        {(uploadedFile.size / 1024).toFixed(2)} KB
+                        {formatFileSize(uploadedFile.size)}
                       </p>
                     </div>
                     <button

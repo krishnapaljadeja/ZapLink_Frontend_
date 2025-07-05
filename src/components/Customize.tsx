@@ -165,14 +165,13 @@ export default function CustomizePage() {
   };
 
   return (
-    <div className="min-h-screen">
-      <main className="container mx-auto px-4 sm:px-6 py-8 sm:py-12 max-w-3xl">
-        {/* Back Button */}
-        <div className="mb-6">
-          <Button
-            variant="ghost"
-            onClick={handleBack}
-            className="flex items-center gap-2"
+    <div className="min-h-screen bg-background page-enter">
+      {/* Header */}
+      <header className="glass-nav sticky top-0 z-50">
+        <div className="container mx-auto px-4 sm:px-6 py-4 flex items-center gap-4">
+          <Link
+            to="/"
+            className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-all duration-200 hover:scale-105"
           >
             <ArrowLeft className="h-5 w-5" />
             Back
