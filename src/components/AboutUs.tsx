@@ -43,6 +43,7 @@ export default function AboutUs() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-3 bg-muted/30 hover:bg-primary/10 rounded-xl transition-all duration-200 hover:scale-110 group focus-ring"
+                    style={{ pointerEvents: "auto" }}
                   >
                     <Github className="h-5 w-5 text-muted-foreground group-hover:text-primary" />
                   </a>
@@ -51,6 +52,7 @@ export default function AboutUs() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-3 bg-muted/30 hover:bg-primary/10 rounded-xl transition-all duration-200 hover:scale-110 group focus-ring"
+                    style={{ pointerEvents: "auto" }}
                   >
                     <Linkedin className="h-5 w-5 text-muted-foreground group-hover:text-primary" />
                   </a>
@@ -78,6 +80,7 @@ export default function AboutUs() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-3 bg-muted/30 hover:bg-primary/10 rounded-xl transition-all duration-200 hover:scale-110 group focus-ring"
+                    style={{ pointerEvents: "auto" }}
                   >
                     <Github className="h-5 w-5 text-muted-foreground group-hover:text-primary" />
                   </a>
@@ -86,6 +89,7 @@ export default function AboutUs() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-3 bg-muted/30 hover:bg-primary/10 rounded-xl transition-all duration-200 hover:scale-110 group focus-ring"
+                    style={{ pointerEvents: "auto" }}
                   >
                     <Linkedin className="h-5 w-5 text-muted-foreground group-hover:text-primary" />
                   </a>

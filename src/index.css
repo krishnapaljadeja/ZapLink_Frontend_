@@ -147,13 +147,17 @@ body {
 }
 
 .content-type-card::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, hsl(var(--primary) / 0.02) 0%, transparent 50%);
+  background: linear-gradient(
+    135deg,
+    hsl(var(--primary) / 0.02) 0%,
+    transparent 50%
+  );
   opacity: 0;
   transition: opacity 0.2s ease;
 }
@@ -210,15 +214,20 @@ body {
 }
 
 .feature-card::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(circle at top left, hsl(var(--primary) / 0.03) 0%, transparent 50%);
+  background: radial-gradient(
+    circle at top left,
+    hsl(var(--primary) / 0.03) 0%,
+    transparent 50%
+  );
   opacity: 0;
   transition: opacity 0.2s ease;
+  pointer-events: none;
 }
 
 .feature-card:hover::before {
@@ -255,19 +264,28 @@ body {
 
 /* Smooth transitions for theme switching */
 * {
-  transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+  transition: border-color 0.2s ease, background-color 0.2s ease,
+    color 0.2s ease;
 }
 
 /* Gradient text */
 .gradient-text {
-  background: linear-gradient(135deg, hsl(var(--foreground)) 0%, hsl(var(--muted-foreground)) 100%);
+  background: linear-gradient(
+    135deg,
+    hsl(var(--foreground)) 0%,
+    hsl(var(--muted-foreground)) 100%
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .gradient-text-primary {
-  background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary) / 0.8) 100%);
+  background: linear-gradient(
+    135deg,
+    hsl(var(--primary)) 0%,
+    hsl(var(--primary) / 0.8) 100%
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
