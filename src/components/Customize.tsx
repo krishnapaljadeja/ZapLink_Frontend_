@@ -163,9 +163,9 @@ export default function CustomizePage() {
   };
 
   return (
-    <div className="min-h-screen bg-background page-enter">
+    <div className="min-h-screen bg-background">
       <main className="container mx-auto px-4 sm:px-6 py-8 sm:py-12 max-w-7xl">
-        <div className="bg-card rounded-3xl shadow-lg p-6 sm:p-8 space-y-8 border border-border animate-fade-in-up">
+        <div className="bg-card rounded-3xl shadow-lg p-6 sm:p-8 space-y-8 border border-border">
           {/* Step Indicator */}
           <div className="flex items-center justify-between mb-8">
             <span className="text-xs sm:text-sm text-primary font-semibold bg-primary/10 px-3 py-1 rounded-full">
@@ -183,7 +183,7 @@ export default function CustomizePage() {
           {/* Two-column layout: Preview on left, Controls on right */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
             {/* QR Preview Card */}
-            <div className="flex flex-col items-center justify-center animate-scale-in order-2 lg:order-1">
+            <div className="flex flex-col items-center justify-center order-2 lg:order-1">
               <div className="bg-gradient-to-br from-muted/30 to-muted/10 p-8 sm:p-12 rounded-3xl border border-border/50 shadow-xl backdrop-blur-sm">
                 <div
                   ref={qrRef}
@@ -211,7 +211,7 @@ export default function CustomizePage() {
             </div>
 
             {/* Customization Controls */}
-            <div className="space-y-8 animate-slide-in-right order-1 lg:order-2">
+            <div className="space-y-8 order-1 lg:order-2">
               <div className="flex items-center gap-3 mb-6">
                 <div className="p-2 bg-primary/10 rounded-lg">
                   <Palette className="h-5 w-5 text-primary" />

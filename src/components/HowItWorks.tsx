@@ -4,9 +4,9 @@ import { Button } from "./ui/button";
 
 export default function HowItWorks() {
   return (
-    <div className="min-h-screen bg-background page-enter">
+    <div className="min-h-screen bg-background">
       <main className="container mx-auto px-6 py-16 max-w-7xl">
-        <div className="bg-card rounded-3xl shadow-lg p-8 sm:p-12 space-y-16 border border-border animate-fade-in-up">
+        <div className="bg-card rounded-3xl shadow-lg p-8 sm:p-12 space-y-16 border border-border">
           <div className="text-center space-y-6">
             <div className="inline-flex items-center gap-3 bg-primary/10 px-6 py-3 rounded-full">
               <Zap className="h-6 w-6 text-primary" />
@@ -25,7 +25,7 @@ export default function HowItWorks() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 lg:gap-12">
-            <div className="feature-card animate-fade-in-up stagger-1">
+            <div className="feature-card">
               <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl flex items-center justify-center shadow-lg mb-6">
                 <Upload className="h-10 w-10 text-white" />
               </div>
@@ -56,7 +56,7 @@ export default function HowItWorks() {
               </div>
             </div>
 
-            <div className="feature-card animate-fade-in-up stagger-2">
+            <div className="feature-card">
               <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-green-600 rounded-3xl flex items-center justify-center shadow-lg mb-6">
                 <Shield className="h-10 w-10 text-white" />
               </div>
@@ -84,7 +84,7 @@ export default function HowItWorks() {
               </div>
             </div>
 
-            <div className="feature-card animate-fade-in-up stagger-3">
+            <div className="feature-card">
               <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-purple-600 rounded-3xl flex items-center justify-center shadow-lg mb-6">
                 <Palette className="h-10 w-10 text-white" />
               </div>
@@ -115,7 +115,7 @@ export default function HowItWorks() {
 
           {/* Features Grid */}
           <div className="grid md:grid-cols-2 gap-8 lg:gap-12 pt-8 border-t border-border">
-            <div className="animate-fade-in-up stagger-4">
+            <div>
               <h3 className="text-2xl font-bold text-foreground flex items-center gap-3 mb-6">
                 <QrCode className="h-6 w-6 text-primary" />
                 Why Choose ZapLink?
@@ -158,7 +158,7 @@ export default function HowItWorks() {
               </ul>
             </div>
 
-            <div className="animate-fade-in-up stagger-5">
+            <div>
               <h3 className="text-2xl font-bold text-foreground flex items-center gap-3 mb-6">
                 <Download className="h-6 w-6 text-primary" />
                 Perfect For
@@ -196,7 +196,7 @@ export default function HowItWorks() {
             </div>
           </div>
 
-          <div className="pt-12 border-t border-border text-center animate-fade-in-up stagger-6">
+          <div className="pt-12 border-t border-border text-center">
             <h3 className="text-3xl font-bold text-foreground mb-4">
               Ready to Create Your First QR Code?
             </h3>

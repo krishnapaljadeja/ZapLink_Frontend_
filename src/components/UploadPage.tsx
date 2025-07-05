@@ -592,9 +592,9 @@ export default function UploadPage() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-background page-enter">
+    <div className="min-h-screen flex flex-col bg-background">
       <main className="container mx-auto px-4 sm:px-6 py-8 sm:py-12 max-w-4xl">
-        <div className="bg-card rounded-3xl shadow-lg p-6 sm:p-10 space-y-8 sm:space-y-12 border border-border animate-fade-in-up">
+        <div className="bg-card rounded-3xl shadow-lg p-6 sm:p-10 space-y-8 sm:space-y-12 border border-border">
           {/* Step Indicator */}
           <div className="flex items-center justify-between mb-8 sm:mb-12">
             <span className="text-xs sm:text-sm text-primary font-semibold bg-primary/10 px-4 py-2 rounded-full">
@@ -610,7 +610,7 @@ export default function UploadPage() {
           </div>
 
           {/* QR Code Name */}
-          <div className="space-y-4 animate-slide-in-left stagger-1">
+          <div className="space-y-4">
             <Label className="text-lg font-semibold text-foreground flex items-center gap-3">
               <div className="w-3 h-3 bg-primary rounded-full"></div>
               Name your QR Code
@@ -626,7 +626,7 @@ export default function UploadPage() {
 
           {/* Content Input */}
           {type === "url" ? (
-            <div className="space-y-4 animate-slide-in-left stagger-2">
+            <div className="space-y-4">
               <Label
                 htmlFor="url"
                 className="text-lg font-semibold text-foreground flex items-center gap-3"
@@ -648,7 +648,7 @@ export default function UploadPage() {
               </p>
             </div>
           ) : type === "text" ? (
-            <div className="space-y-4 animate-slide-in-left stagger-2">
+            <div className="space-y-4">
               <Label
                 htmlFor="text"
                 className="text-lg font-semibold text-foreground flex items-center gap-3"
@@ -676,7 +676,7 @@ export default function UploadPage() {
               </div>
             </div>
           ) : (
-            <div className="space-y-6 animate-slide-in-left stagger-2">
+            <div className="space-y-6">
               <div className="space-y-4">
                 <Label
                   htmlFor="file"
@@ -720,7 +720,7 @@ export default function UploadPage() {
               )}
 
               {uploadedFile && (
-                <div className="p-6 border border-border rounded-xl bg-muted/30 animate-scale-in">
+                <div className="p-6 border border-border rounded-xl bg-muted/30">
                   <div className="flex items-center gap-4">
                     <div className="p-3 bg-primary/10 rounded-xl">
                       <Upload className="h-6 w-6 text-primary" />
@@ -747,7 +747,7 @@ export default function UploadPage() {
           )}
 
           {/* Security Options */}
-          <div className="space-y-8 animate-slide-in-left stagger-3">
+          <div className="space-y-8">
             <h3 className="text-2xl font-bold text-foreground flex items-center gap-3">
               <Shield className="h-6 w-6 text-primary" />
               Security Options
@@ -771,7 +771,7 @@ export default function UploadPage() {
               </div>
 
               {passwordProtect && (
-                <div className="pl-10 animate-scale-in">
+                <div className="pl-10">
                   <Input
                     type="password"
                     placeholder="Enter a secure password..."
@@ -799,7 +799,7 @@ export default function UploadPage() {
               </div>
 
               {selfDestruct && (
-                <div className="pl-10 space-y-6 animate-scale-in">
+                <div className="pl-10 space-y-6">
                   <div className="flex items-center space-x-4 p-4 rounded-xl bg-muted/20 border border-border/50">
                     <Checkbox
                       id="destruct-views"
@@ -819,7 +819,7 @@ export default function UploadPage() {
                   </div>
 
                   {destructViews && (
-                    <div className="pl-8 animate-scale-in">
+                    <div className="pl-8">
                       <Input
                         type="number"
                         placeholder="Number of views"
@@ -849,7 +849,7 @@ export default function UploadPage() {
                   </div>
 
                   {destructTime && (
-                    <div className="pl-8 animate-scale-in">
+                    <div className="pl-8">
                       <Input
                         type="number"
                         placeholder="Hours until expiration"
@@ -865,7 +865,7 @@ export default function UploadPage() {
           </div>
 
           {/* Generate Button */}
-          <div className="pt-8 animate-fade-in-up stagger-4">
+          <div className="pt-8">
             <Button
               onClick={handleGenerateAndContinue}
               disabled={!canGenerate || loading}
@@ -902,7 +902,7 @@ export default function UploadPage() {
                 textValue,
                 type,
               }) && (
-              <div className="w-full flex justify-center animate-fade-in-up stagger-5">
+              <div className="w-full flex justify-center">
                 <Button
                   className="w-full max-w-md h-14 bg-secondary text-secondary-foreground hover:bg-secondary/80 rounded-xl font-semibold transition-all duration-300 hover:scale-[1.02] focus-ring"
                   onClick={() => navigate("/customize", { state: lastQR })}

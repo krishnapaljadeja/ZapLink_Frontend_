@@ -4,9 +4,9 @@ import { Button } from "./ui/button";
 
 export default function AboutUs() {
   return (
-    <div className="min-h-screen bg-background page-enter">
+    <div className="min-h-screen bg-background">
       <main className="container mx-auto px-6 py-16 max-w-7xl">
-        <div className="bg-card rounded-3xl shadow-lg p-8 sm:p-12 space-y-16 border border-border animate-fade-in-up">
+        <div className="bg-card rounded-3xl shadow-lg p-8 sm:p-12 space-y-16 border border-border">
           <div className="text-center space-y-6">
             <div className="inline-flex items-center gap-3 bg-primary/10 px-6 py-3 rounded-full">
               <Heart className="h-6 w-6 text-primary" />
@@ -23,7 +23,7 @@ export default function AboutUs() {
           </div>
 
           <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
-            <div className="feature-card animate-fade-in-up stagger-1">
+            <div className="feature-card">
               <div className="text-center">
                 <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl mx-auto flex items-center justify-center shadow-lg mb-6">
                   <span className="text-3xl font-bold text-white">KJ</span>
@@ -72,7 +72,7 @@ export default function AboutUs() {
               </div>
             </div>
 
-            <div className="feature-card animate-fade-in-up stagger-2">
+            <div className="feature-card">
               <div className="text-center">
                 <div className="w-24 h-24 bg-gradient-to-br from-green-500 to-green-600 rounded-3xl mx-auto flex items-center justify-center shadow-lg mb-6">
                   <span className="text-3xl font-bold text-white">VK</span>
@@ -124,7 +124,7 @@ export default function AboutUs() {
 
           {/* Mission Section */}
           <div className="pt-8 border-t border-border">
-            <div className="text-center space-y-8 animate-fade-in-up stagger-3">
+            <div className="text-center space-y-8">
               <div className="space-y-4">
                 <h3 className="text-3xl font-bold text-foreground flex items-center justify-center gap-3">
                   <Zap className="h-8 w-8 text-primary" />

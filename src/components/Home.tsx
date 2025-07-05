@@ -78,11 +78,11 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-background page-enter">
+    <div className="min-h-screen flex flex-col bg-background">
       {/* Hero Section */}
       <main className="flex-1 container mx-auto px-4 sm:px-6 py-12 sm:py-20 max-w-7xl">
-        <div className="text-center mb-16 sm:mb-24 animate-fade-in-up">
-          <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-6 animate-gentle-bounce">
+        <div className="text-center mb-16 sm:mb-24">
+          <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-6">
             <Zap className="h-4 w-4" />
             Secure QR Code Generator
           </div>
@@ -99,7 +99,7 @@ export default function Home() {
 
         {/* Content Type Selection */}
         <div className="mb-16 sm:mb-24">
-          <div className="text-center mb-12 sm:mb-16 animate-fade-in-up stagger-2">
+          <div className="text-center mb-12 sm:mb-16">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-foreground">
               What would you like to share?
             </h2>
@@ -115,10 +115,7 @@ export default function Home() {
                 onClick={() =>
                   navigate("/upload", { state: { type: type.id } })
                 }
-                className={cn(
-                  "group content-type-card text-left focus-ring",
-                  `animate-scale-in stagger-${Math.min(index + 1, 8)}`
-                )}
+                className="group content-type-card text-left focus-ring"
               >
                 <div className="relative z-10 flex flex-col items-center gap-4 sm:gap-6">
                   <div
@@ -146,7 +143,7 @@ export default function Home() {
 
         {/* Features Section */}
         <div className="grid md:grid-cols-3 gap-6 sm:gap-8 lg:gap-12">
-          <div className="feature-card animate-fade-in-up stagger-3">
+          <div className="feature-card">
             <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-primary to-primary/80 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg">
               <Zap className="h-8 w-8 sm:h-10 sm:w-10 text-primary-foreground" />
             </div>
@@ -159,7 +156,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="feature-card animate-fade-in-up stagger-4">
+          <div className="feature-card">
             <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg">
               <Shield className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
             </div>
@@ -172,7 +169,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="feature-card animate-fade-in-up stagger-5">
+          <div className="feature-card">
             <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-purple-500 to-purple-600 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg">
               <Palette className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
             </div>
@@ -187,7 +184,7 @@ export default function Home() {
         </div>
 
         {/* CTA Section */}
-        <div className="text-center mt-16 sm:mt-24 animate-fade-in-up stagger-6">
+        <div className="text-center mt-16 sm:mt-24">
           <div className="bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 rounded-3xl p-8 sm:p-12 border border-primary/20">
             <div className="flex items-center justify-center gap-3 mb-6">
               <Clock className="h-6 w-6 text-primary" />

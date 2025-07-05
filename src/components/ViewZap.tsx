@@ -297,8 +297,8 @@ export default function ViewZap() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background page-enter">
-        <div className="text-center animate-fade-in">
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center">
           <div className="w-16 h-16 border-4 border-primary/30 border-t-primary rounded-full loading-spinner mx-auto mb-6"></div>
           <div className="text-lg text-muted-foreground">
             Loading your content...
@@ -310,8 +310,8 @@ export default function ViewZap() {
 
   if (passwordRequired) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-background p-6 page-enter">
-        <div className="bg-card rounded-3xl shadow-lg p-10 border border-border max-w-md w-full text-center animate-scale-in">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background p-6">
+        <div className="bg-card rounded-3xl shadow-lg p-10 border border-border max-w-md w-full text-center">
           <div className="w-20 h-20 bg-primary/10 rounded-3xl flex items-center justify-center mx-auto mb-8">
             <Shield className="h-10 w-10 text-primary" />
           </div>
@@ -362,8 +362,8 @@ export default function ViewZap() {
   if (error) {
     const ErrorIcon = getErrorIcon(errorType);
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-background p-6 page-enter">
-        <div className="bg-card rounded-3xl shadow-lg p-10 border border-border max-w-md w-full text-center animate-scale-in">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background p-6">
+        <div className="bg-card rounded-3xl shadow-lg p-10 border border-border max-w-md w-full text-center">
           <div className="w-20 h-20 bg-destructive/10 rounded-3xl flex items-center justify-center mx-auto mb-8">
             <ErrorIcon className="h-10 w-10 text-destructive" />
           </div>
