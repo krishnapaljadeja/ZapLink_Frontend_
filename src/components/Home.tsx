@@ -8,6 +8,10 @@ import {
   FileXIcon as DocxIcon,
   Presentation,
   Zap,
+  ArrowRight,
+  Shield,
+  Palette,
+  Clock,
 } from "lucide-react";
 import { cn } from "../lib/utils";
 import { useNavigate } from "react-router-dom";
@@ -20,75 +24,91 @@ export default function Home() {
       label: "PDF",
       icon: FileText,
       color: "from-red-500 to-red-600",
+      description: "Documents & Reports",
     },
     {
       id: "image",
       label: "Image",
       icon: ImageIcon,
       color: "from-blue-500 to-blue-600",
+      description: "Photos & Graphics",
     },
     {
       id: "video",
       label: "Video",
       icon: Video,
       color: "from-purple-500 to-purple-600",
+      description: "Movies & Clips",
     },
     {
       id: "audio",
       label: "Audio",
       icon: Music,
       color: "from-pink-500 to-pink-600",
+      description: "Music & Podcasts",
     },
     {
       id: "url",
       label: "URL",
       icon: LinkIcon,
       color: "from-green-500 to-green-600",
+      description: "Websites & Links",
     },
     {
       id: "text",
       label: "Text",
       icon: Type,
       color: "from-yellow-500 to-yellow-600",
+      description: "Notes & Messages",
     },
     {
       id: "document",
       label: "Document",
       icon: DocxIcon,
       color: "from-indigo-500 to-indigo-600",
+      description: "Word & Text Files",
     },
     {
       id: "presentation",
       label: "Presentation",
       icon: Presentation,
       color: "from-orange-500 to-orange-600",
+      description: "Slides & Decks",
     },
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <div className="min-h-screen flex flex-col bg-background page-enter">
       {/* Hero Section */}
-      <main className="flex-1 container mx-auto px-4 sm:px-6 py-12 sm:py-20 max-w-6xl">
-        <div className="text-center mb-16 sm:mb-20">
-          <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold mb-6 sm:mb-8 bg-gradient-to-r from-foreground via-foreground to-muted-foreground bg-clip-text text-transparent leading-tight">
-            Share Files with
-            <span className="block bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent mt-2">
-              Secure QR Codes
-            </span>
+      <main className="flex-1 container mx-auto px-4 sm:px-6 py-12 sm:py-20 max-w-7xl">
+        <div className="text-center mb-16 sm:mb-24 animate-fade-in-up">
+          <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-6 animate-gentle-bounce">
+            <Zap className="h-4 w-4" />
+            Secure QR Code Generator
+          </div>
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold mb-6 sm:mb-8 leading-tight">
+            <span className="gradient-text">Share Files with</span>
+            <br />
+            <span className="gradient-text-primary">Secure QR Codes</span>
           </h1>
-          <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
             Transform any file into a secure, shareable QR code with password
             protection, self-destruct options, and beautiful customization.
           </p>
         </div>
 
         {/* Content Type Selection */}
-        <div className="mb-12 sm:mb-16">
-          <h2 className="text-2xl sm:text-3xl font-semibold text-center mb-8 sm:mb-12 text-foreground">
-            What would you like to share?
-          </h2>
+        <div className="mb-16 sm:mb-24">
+          <div className="text-center mb-12 sm:mb-16 animate-fade-in-up stagger-2">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-foreground">
+              What would you like to share?
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Choose your content type and create a QR code in seconds
+            </p>
+          </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
             {contentTypes.map((type, index) => (
               <button
                 key={type.id}
@@ -96,32 +116,28 @@ export default function Home() {
                   navigate("/upload", { state: { type: type.id } })
                 }
                 className={cn(
-                  "group relative overflow-hidden rounded-2xl p-6 sm:p-8 transition-all duration-300",
-                  "hover:scale-105 hover:shadow-2xl card-hover",
-                  "bg-card/50 backdrop-blur-sm border border-border/50 hover:border-primary/30"
+                  "group content-type-card text-left focus-ring",
+                  `animate-scale-in stagger-${Math.min(index + 1, 8)}`
                 )}
-                style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div
-                  className="absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-5 transition-opacity duration-300"
-                  style={{
-                    backgroundImage: `linear-gradient(135deg, var(--primary), var(--primary))`,
-                  }}
-                ></div>
-
-                <div className="relative z-10 flex flex-col items-center gap-3 sm:gap-4">
+                <div className="relative z-10 flex flex-col items-center gap-4 sm:gap-6">
                   <div
                     className={cn(
-                      "p-3 sm:p-4 rounded-2xl bg-gradient-to-br transition-all duration-300 shadow-lg",
+                      "p-4 sm:p-5 rounded-2xl bg-gradient-to-br transition-all duration-300 shadow-lg",
                       "group-hover:scale-110 group-hover:shadow-xl",
                       type.color
                     )}
                   >
                     <type.icon className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
                   </div>
-                  <span className="text-xs sm:text-sm font-semibold text-foreground group-hover:text-primary transition-colors duration-300">
-                    {type.label}
-                  </span>
+                  <div className="text-center">
+                    <h3 className="text-sm sm:text-base font-semibold text-foreground group-hover:text-primary transition-colors duration-300 mb-1">
+                      {type.label}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-muted-foreground">
+                      {type.description}
+                    </p>
+                  </div>
                 </div>
               </button>
             ))}
@@ -129,77 +145,68 @@ export default function Home() {
         </div>
 
         {/* Features Section */}
-        <div className="grid md:grid-cols-3 gap-6 sm:gap-8 mt-16 sm:mt-24">
-          <div
-            className="text-center p-6 sm:p-8 rounded-3xl bg-card/30 backdrop-blur-sm border border-border/30 hover:border-primary/30 transition-all duration-300 hover:shadow-lg"
-            style={{ animationDelay: "0.2s" }}
-          >
-            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-primary to-primary/80 rounded-3xl flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-lg">
+        <div className="grid md:grid-cols-3 gap-6 sm:gap-8 lg:gap-12">
+          <div className="feature-card animate-fade-in-up stagger-3">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-primary to-primary/80 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg">
               <Zap className="h-8 w-8 sm:h-10 sm:w-10 text-primary-foreground" />
             </div>
-            <h3 className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4 text-foreground">
+            <h3 className="text-xl sm:text-2xl font-bold mb-4 text-foreground text-center">
               Lightning Fast
             </h3>
-            <p className="text-muted-foreground leading-relaxed text-sm sm:text-base">
+            <p className="text-muted-foreground leading-relaxed text-center">
               Generate QR codes instantly with our optimized processing engine
-              and cloud infrastructure.
+              and cloud infrastructure. No waiting, just results.
             </p>
           </div>
 
-          <div
-            className="text-center p-6 sm:p-8 rounded-3xl bg-card/30 backdrop-blur-sm border border-border/30 hover:border-primary/30 transition-all duration-300 hover:shadow-lg"
-            style={{ animationDelay: "0.4s" }}
-          >
-            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-lg">
-              <svg
-                className="h-8 w-8 sm:h-10 sm:w-10 text-white"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                />
-              </svg>
+          <div className="feature-card animate-fade-in-up stagger-4">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+              <Shield className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
             </div>
-            <h3 className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4 text-foreground">
+            <h3 className="text-xl sm:text-2xl font-bold mb-4 text-foreground text-center">
               Secure & Private
             </h3>
-            <p className="text-muted-foreground leading-relaxed text-sm sm:text-base">
+            <p className="text-muted-foreground leading-relaxed text-center">
               Bank-level encryption with password protection and self-destruct
-              options keep your files safe.
+              options keep your files safe and secure.
             </p>
           </div>
 
-          <div
-            className="text-center p-6 sm:p-8 rounded-3xl bg-card/30 backdrop-blur-sm border border-border/30 hover:border-primary/30 transition-all duration-300 hover:shadow-lg"
-            style={{ animationDelay: "0.6s" }}
-          >
-            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-purple-500 to-purple-600 rounded-3xl flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-lg">
-              <svg
-                className="h-8 w-8 sm:h-10 sm:w-10 text-white"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h4a2 2 0 002-2V9a2 2 0 00-2-2H7a2 2 0 00-2 2v6a2 2 0 002 2z"
-                />
-              </svg>
+          <div className="feature-card animate-fade-in-up stagger-5">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-purple-500 to-purple-600 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+              <Palette className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
             </div>
-            <h3 className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4 text-foreground">
+            <h3 className="text-xl sm:text-2xl font-bold mb-4 text-foreground text-center">
               Fully Customizable
             </h3>
-            <p className="text-muted-foreground leading-relaxed text-sm sm:text-base">
+            <p className="text-muted-foreground leading-relaxed text-center">
               Design your QR codes with custom frames, colors, logos, and
               professional styling options.
             </p>
+          </div>
+        </div>
+
+        {/* CTA Section */}
+        <div className="text-center mt-16 sm:mt-24 animate-fade-in-up stagger-6">
+          <div className="bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 rounded-3xl p-8 sm:p-12 border border-primary/20">
+            <div className="flex items-center justify-center gap-3 mb-6">
+              <Clock className="h-6 w-6 text-primary" />
+              <span className="text-primary font-semibold">Ready in seconds</span>
+            </div>
+            <h3 className="text-2xl sm:text-3xl font-bold mb-4 text-foreground">
+              Start Creating Your QR Code
+            </h3>
+            <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
+              Join thousands of users who trust ZapLink for secure file sharing.
+              No registration required.
+            </p>
+            <button
+              onClick={() => navigate("/upload")}
+              className="inline-flex items-center gap-3 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground px-8 py-4 text-lg font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 focus-ring"
+            >
+              Get Started Free
+              <ArrowRight className="h-5 w-5" />
+            </button>
           </div>
         </div>
       </main>

@@ -9,6 +9,7 @@ import {
   X,
   Palette,
   Sparkles,
+  Check,
 } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import { Button } from "./ui/button";
@@ -45,6 +46,7 @@ export default function CustomizePage() {
 
   const [frameStyle, setFrameStyle] = useState<FrameOption>("none");
   const [logo, setLogo] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const qrValue = state?.shortUrl || "https://zaplink.example.com/demo123";
@@ -90,7 +92,7 @@ export default function CustomizePage() {
           background:
             "linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary)) 100%)",
           borderRadius: 20,
-          boxShadow: "0 8px 32px rgba(34, 197, 94, 0.3)",
+          boxShadow: "0 8px 32px hsl(var(--primary) / 0.3)",
         };
       case "border":
         return {
@@ -135,9 +137,15 @@ export default function CustomizePage() {
     img.src = svgUrl;
   };
 
-  const handleCopyLink = () => {
-    navigator.clipboard.writeText(qrValue);
-    toast.success("Short link has been copied to clipboard.");
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(qrValue);
+      setCopied(true);
+      toast.success("Short link has been copied to clipboard.");
+      setTimeout(() => setCopied(false), 2000);
+    } catch (error) {
+      toast.error("Failed to copy link. Please try again.");
+    }
   };
 
   const handleShare = () => {
@@ -156,14 +164,14 @@ export default function CustomizePage() {
 
   return (
     <div className="min-h-screen bg-background page-enter">
-      <main className="container mx-auto px-4 sm:px-6 py-8 sm:py-12 max-w-6xl">
-        <div className="bg-card/50 backdrop-blur-sm rounded-3xl shadow-2xl p-6 sm:p-8 space-y-8 border border-border/30 animate-fade-in-up">
+      <main className="container mx-auto px-4 sm:px-6 py-8 sm:py-12 max-w-7xl">
+        <div className="bg-card rounded-3xl shadow-lg p-6 sm:p-8 space-y-8 border border-border animate-fade-in-up">
           {/* Step Indicator */}
           <div className="flex items-center justify-between mb-8">
             <span className="text-xs sm:text-sm text-primary font-semibold bg-primary/10 px-3 py-1 rounded-full">
               Step 3 of 3
             </span>
-            <div className="flex-1 mx-4 h-2 bg-muted/30 rounded-full overflow-hidden">
+            <div className="flex-1 mx-4 h-2 bg-muted rounded-full overflow-hidden">
               <div className="progress-bar h-full w-full"></div>
             </div>
             <span className="text-xs sm:text-sm text-primary font-semibold flex items-center gap-1">
@@ -173,10 +181,10 @@ export default function CustomizePage() {
           </div>
 
           {/* Two-column layout: Preview on left, Controls on right */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
             {/* QR Preview Card */}
             <div className="flex flex-col items-center justify-center animate-scale-in order-2 lg:order-1">
-              <div className="bg-gradient-to-br from-card to-card/50 p-6 sm:p-8 rounded-3xl border border-border/50 shadow-2xl backdrop-blur-sm">
+              <div className="bg-gradient-to-br from-muted/30 to-muted/10 p-8 sm:p-12 rounded-3xl border border-border/50 shadow-xl backdrop-blur-sm">
                 <div
                   ref={qrRef}
                   className="flex items-center justify-center transition-all duration-500 hover:scale-105"
@@ -197,21 +205,18 @@ export default function CustomizePage() {
                   />
                 </div>
               </div>
-              <p className="text-sm text-muted-foreground mt-4 text-center">
+              <p className="text-sm text-muted-foreground mt-6 text-center">
                 Scan to preview your QR code
               </p>
             </div>
 
             {/* Customization Controls */}
-            <div
-              className="space-y-6 animate-slide-in-left order-1 lg:order-2"
-              style={{ animationDelay: "0.2s" }}
-            >
+            <div className="space-y-8 animate-slide-in-right order-1 lg:order-2">
               <div className="flex items-center gap-3 mb-6">
                 <div className="p-2 bg-primary/10 rounded-lg">
                   <Palette className="h-5 w-5 text-primary" />
                 </div>
-                <h2 className="text-xl sm:text-2xl font-bold text-foreground">
+                <h2 className="text-2xl sm:text-3xl font-bold text-foreground">
                   Design Options
                 </h2>
               </div>
@@ -233,11 +238,11 @@ export default function CustomizePage() {
                 >
                   <SelectTrigger
                     id="frame-style"
-                    className="w-full h-12 rounded-xl border-border/50 bg-background/50 backdrop-blur-sm text-foreground font-medium"
+                    className="w-full h-12 rounded-xl border-border bg-background text-foreground font-medium focus-ring"
                   >
                     <SelectValue placeholder="Select a frame style" />
                   </SelectTrigger>
-                  <SelectContent className="rounded-xl border border-border/50 bg-card/90 backdrop-blur-sm text-foreground shadow-2xl">
+                  <SelectContent className="rounded-xl border border-border bg-card text-foreground shadow-2xl">
                     <SelectItem value="none" className="rounded-lg">
                       None
                     </SelectItem>
@@ -270,7 +275,7 @@ export default function CustomizePage() {
                   Upload Logo (Optional)
                 </Label>
                 <div
-                  className="relative border-2 border-dashed rounded-2xl p-6 text-center transition-all duration-300 cursor-pointer border-border/50 bg-background/30 hover:border-primary/50 hover:bg-primary/5 backdrop-blur-sm"
+                  className="relative border-2 border-dashed rounded-2xl p-6 text-center transition-all duration-300 cursor-pointer border-border bg-muted/20 hover:border-primary/50 hover:bg-primary/5 backdrop-blur-sm"
                   onClick={() => fileInputRef.current?.click()}
                 >
                   <input
@@ -286,7 +291,7 @@ export default function CustomizePage() {
                       <img
                         src={logo}
                         alt="Logo Preview"
-                        className="h-12 w-12 sm:h-16 sm:w-16 object-contain rounded-lg"
+                        className="h-16 w-16 object-contain rounded-lg"
                       />
                       <span className="text-foreground font-medium">
                         Logo uploaded
@@ -299,7 +304,7 @@ export default function CustomizePage() {
                           e.stopPropagation();
                           setLogo(null);
                         }}
-                        className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-lg"
+                        className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-lg focus-ring"
                       >
                         <X className="h-4 w-4" />
                       </Button>
@@ -307,7 +312,7 @@ export default function CustomizePage() {
                   ) : (
                     <div className="flex flex-col items-center justify-center space-y-3">
                       <div className="p-3 bg-primary/10 rounded-xl">
-                        <Upload className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
+                        <Upload className="h-8 w-8 text-primary" />
                       </div>
                       <div>
                         <p className="text-sm font-medium text-foreground">
@@ -323,19 +328,19 @@ export default function CustomizePage() {
               </div>
 
               {/* Actions */}
-              <div className="space-y-6 pt-6 border-t border-border/30">
+              <div className="space-y-6 pt-6 border-t border-border">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="p-2 bg-green-500/10 rounded-lg">
                     <Sparkles className="h-5 w-5 text-green-500" />
                   </div>
-                  <h2 className="text-lg sm:text-xl font-bold text-foreground">
+                  <h2 className="text-xl font-bold text-foreground">
                     Actions
                   </h2>
                 </div>
                 <div className="grid grid-cols-1 gap-4">
                   <Button
                     onClick={handleDownload}
-                    className="h-12 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:scale-[1.02] shadow-lg hover:shadow-xl"
+                    className="h-14 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:scale-[1.02] shadow-lg hover:shadow-xl focus-ring"
                   >
                     <Download className="h-5 w-5 mr-2" />
                     Download QR Code
@@ -344,16 +349,26 @@ export default function CustomizePage() {
                     <Button
                       onClick={handleCopyLink}
                       variant="outline"
-                      className="h-12 border-primary/30 text-primary hover:bg-primary/10 hover:text-primary font-semibold rounded-xl transition-all duration-300 hover:scale-[1.02] bg-background/50 backdrop-blur-sm"
+                      className="h-12 border-primary/30 text-primary hover:bg-primary/10 hover:text-primary font-semibold rounded-xl transition-all duration-300 hover:scale-[1.02] bg-background focus-ring"
                     >
-                      <Copy className="h-4 w-4 mr-2" />
-                      <span className="hidden sm:inline">Copy Link</span>
-                      <span className="sm:hidden">Copy</span>
+                      {copied ? (
+                        <>
+                          <Check className="h-4 w-4 mr-2" />
+                          <span className="hidden sm:inline">Copied!</span>
+                          <span className="sm:hidden">✓</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="h-4 w-4 mr-2" />
+                          <span className="hidden sm:inline">Copy Link</span>
+                          <span className="sm:hidden">Copy</span>
+                        </>
+                      )}
                     </Button>
                     <Button
                       onClick={handleShare}
                       variant="outline"
-                      className="h-12 border-primary/30 text-primary hover:bg-primary/10 hover:text-primary font-semibold rounded-xl transition-all duration-300 hover:scale-[1.02] bg-background/50 backdrop-blur-sm"
+                      className="h-12 border-primary/30 text-primary hover:bg-primary/10 hover:text-primary font-semibold rounded-xl transition-all duration-300 hover:scale-[1.02] bg-background focus-ring"
                     >
                       <Share2 className="h-4 w-4 mr-2" />
                       Share
@@ -365,14 +380,14 @@ export default function CustomizePage() {
           </div>
 
           {/* Back Button */}
-          <div className="mt-8">
+          <div className="mt-8 pt-6 border-t border-border">
             <Link
               to="/upload"
               state={{ type: state?.type?.toLowerCase() || "pdf" }}
-              className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-all duration-200 hover:scale-105"
+              className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-all duration-200 hover:scale-105 focus-ring rounded-lg p-2"
             >
               <ArrowLeft className="h-5 w-5" />
-              <span className="hidden sm:inline">Back</span>
+              <span>Back to Upload</span>
             </Link>
           </div>
         </div>

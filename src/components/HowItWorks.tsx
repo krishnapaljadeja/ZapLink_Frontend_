@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
-import { Upload, QrCode, Download, Zap, Shield, Palette } from "lucide-react";
+import { Upload, QrCode, Download, Zap, Shield, Palette, ArrowRight } from "lucide-react";
 import { Button } from "./ui/button";
 
 export default function HowItWorks() {
   return (
-    <div className="min-h-screen bg-background">
-      <main className="container mx-auto px-6 py-16 max-w-6xl">
-        <div className="bg-card/50 backdrop-blur-sm rounded-3xl shadow-2xl p-12 space-y-16 border border-border/30">
+    <div className="min-h-screen bg-background page-enter">
+      <main className="container mx-auto px-6 py-16 max-w-7xl">
+        <div className="bg-card rounded-3xl shadow-lg p-8 sm:p-12 space-y-16 border border-border animate-fade-in-up">
           <div className="text-center space-y-6">
             <div className="inline-flex items-center gap-3 bg-primary/10 px-6 py-3 rounded-full">
               <Zap className="h-6 w-6 text-primary" />
@@ -14,29 +14,26 @@ export default function HowItWorks() {
                 How ZapLink Works
               </span>
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
+            <h2 className="text-4xl md:text-5xl font-bold gradient-text">
               Create QR Codes in Three Simple Steps
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
               ZapLink makes it incredibly easy to create secure, customizable QR
               codes for any type of content. Follow these simple steps to
               transform your files into shareable QR codes.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            <div
-              className="space-y-6 bg-card/30 p-8 rounded-2xl border border-border/30 hover:border-primary/30 transition-all duration-300 hover:shadow-lg"
-              style={{ animationDelay: "0.1s" }}
-            >
-              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg">
-                <Upload className="h-8 w-8 text-white" />
+          <div className="grid md:grid-cols-3 gap-8 lg:gap-12">
+            <div className="feature-card animate-fade-in-up stagger-1">
+              <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl flex items-center justify-center shadow-lg mb-6">
+                <Upload className="h-10 w-10 text-white" />
               </div>
               <div>
-                <h3 className="text-2xl font-bold text-foreground mb-3">
+                <h3 className="text-2xl font-bold text-foreground mb-4">
                   1. Upload Your Content
                 </h3>
-                <p className="text-muted-foreground leading-relaxed">
+                <p className="text-muted-foreground leading-relaxed mb-6">
                   Choose from 8 different content types including PDFs, images,
                   videos, URLs, and text. Simply drag and drop your file or
                   paste your content. We support all major file formats with
@@ -59,18 +56,15 @@ export default function HowItWorks() {
               </div>
             </div>
 
-            <div
-              className="space-y-6 bg-card/30 p-8 rounded-2xl border border-border/30 hover:border-primary/30 transition-all duration-300 hover:shadow-lg"
-              style={{ animationDelay: "0.2s" }}
-            >
-              <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center shadow-lg">
-                <Shield className="h-8 w-8 text-white" />
+            <div className="feature-card animate-fade-in-up stagger-2">
+              <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-green-600 rounded-3xl flex items-center justify-center shadow-lg mb-6">
+                <Shield className="h-10 w-10 text-white" />
               </div>
               <div>
-                <h3 className="text-2xl font-bold text-foreground mb-3">
+                <h3 className="text-2xl font-bold text-foreground mb-4">
                   2. Secure & Configure
                 </h3>
-                <p className="text-muted-foreground leading-relaxed">
+                <p className="text-muted-foreground leading-relaxed mb-6">
                   Add password protection and set up self-destruct options.
                   Choose to expire your QR code after a certain number of views
                   or time period. Your content stays secure with
@@ -90,18 +84,15 @@ export default function HowItWorks() {
               </div>
             </div>
 
-            <div
-              className="space-y-6 bg-card/30 p-8 rounded-2xl border border-border/30 hover:border-primary/30 transition-all duration-300 hover:shadow-lg"
-              style={{ animationDelay: "0.3s" }}
-            >
-              <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
-                <Palette className="h-8 w-8 text-white" />
+            <div className="feature-card animate-fade-in-up stagger-3">
+              <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-purple-600 rounded-3xl flex items-center justify-center shadow-lg mb-6">
+                <Palette className="h-10 w-10 text-white" />
               </div>
               <div>
-                <h3 className="text-2xl font-bold text-foreground mb-3">
+                <h3 className="text-2xl font-bold text-foreground mb-4">
                   3. Customize & Share
                 </h3>
-                <p className="text-muted-foreground leading-relaxed">
+                <p className="text-muted-foreground leading-relaxed mb-6">
                   Design your QR code with custom frames, add your logo, and
                   choose from various styles. Download in high resolution or
                   share directly. Your QR code is ready to use anywhere, from
@@ -123,13 +114,13 @@ export default function HowItWorks() {
           </div>
 
           {/* Features Grid */}
-          <div className="grid md:grid-cols-2 gap-8 pt-8 border-t border-border/30">
-            <div style={{ animationDelay: "0.4s" }}>
-              <h3 className="text-2xl font-bold text-foreground flex items-center gap-3">
+          <div className="grid md:grid-cols-2 gap-8 lg:gap-12 pt-8 border-t border-border">
+            <div className="animate-fade-in-up stagger-4">
+              <h3 className="text-2xl font-bold text-foreground flex items-center gap-3 mb-6">
                 <QrCode className="h-6 w-6 text-primary" />
                 Why Choose ZapLink?
               </h3>
-              <ul className="space-y-3 text-muted-foreground">
+              <ul className="space-y-4 text-muted-foreground">
                 <li className="flex items-start gap-3">
                   <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
                   <span>
@@ -167,12 +158,12 @@ export default function HowItWorks() {
               </ul>
             </div>
 
-            <div style={{ animationDelay: "0.5s" }}>
-              <h3 className="text-2xl font-bold text-foreground flex items-center gap-3">
+            <div className="animate-fade-in-up stagger-5">
+              <h3 className="text-2xl font-bold text-foreground flex items-center gap-3 mb-6">
                 <Download className="h-6 w-6 text-primary" />
                 Perfect For
               </h3>
-              <ul className="space-y-3 text-muted-foreground">
+              <ul className="space-y-4 text-muted-foreground">
                 <li className="flex items-start gap-3">
                   <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
                   <span>
@@ -205,27 +196,26 @@ export default function HowItWorks() {
             </div>
           </div>
 
-          <div className="pt-12 border-t border-border/30">
-            <div style={{ animationDelay: "0.6s" }}>
-              <h3 className="text-3xl font-bold text-foreground">
-                Ready to Create Your First QR Code?
-              </h3>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                Join thousands of users who trust ZapLink for their QR code
-                needs. Get started now and experience the magic of instant file
-                sharing.
-              </p>
-              <Button
-                size="lg"
-                className="bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground px-8 py-4 text-lg font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
-                asChild
-              >
-                <Link to="/">
-                  <Zap className="mr-2 h-5 w-5" />
-                  Create QR Code Now
-                </Link>
-              </Button>
-            </div>
+          <div className="pt-12 border-t border-border text-center animate-fade-in-up stagger-6">
+            <h3 className="text-3xl font-bold text-foreground mb-4">
+              Ready to Create Your First QR Code?
+            </h3>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
+              Join thousands of users who trust ZapLink for their QR code
+              needs. Get started now and experience the magic of instant file
+              sharing.
+            </p>
+            <Button
+              size="lg"
+              className="bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground px-8 py-4 text-lg font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 focus-ring"
+              asChild
+            >
+              <Link to="/">
+                <Zap className="mr-2 h-5 w-5" />
+                Create QR Code Now
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
           </div>
         </div>
       </main>

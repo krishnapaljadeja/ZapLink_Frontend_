@@ -4,7 +4,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { Shield, AlertTriangle, Home, Lock } from "lucide-react";
+import { Shield, AlertTriangle, Home, Lock, Loader2 } from "lucide-react";
 
 function getErrorMessage(errorParam: string | null) {
   if (!errorParam) return null;
@@ -157,10 +157,10 @@ export default function ViewZap() {
           // Escape HTML entities for security
           const escapeHtml = (unsafe: string) =>
             unsafe
-              .replace(/&/g, "&amp;")
-              .replace(/</g, "&lt;")
-              .replace(/>/g, "&gt;")
-              .replace(/"/g, "&quot;")
+              .replace(/&/g, "&")
+              .replace(/</g, "<")
+              .replace(/>/g, ">")
+              .replace(/"/g, """)
               .replace(/'/g, "&#039;");
           const escapedContent = escapeHtml(content);
           const escapedName = escapeHtml(name || "Untitled");
@@ -301,7 +301,7 @@ export default function ViewZap() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background page-enter">
         <div className="text-center animate-fade-in">
-          <div className="w-16 h-16 border-4 border-primary/30 border-t-primary rounded-full animate-spin mx-auto mb-4"></div>
+          <div className="w-16 h-16 border-4 border-primary/30 border-t-primary rounded-full loading-spinner mx-auto mb-6"></div>
           <div className="text-lg text-muted-foreground">
             Loading your content...
           </div>
@@ -313,7 +313,7 @@ export default function ViewZap() {
   if (passwordRequired) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-background p-6 page-enter">
-        <div className="bg-card/50 backdrop-blur-sm p-10 rounded-3xl shadow-2xl border border-border/30 max-w-md w-full text-center animate-scale-in">
+        <div className="bg-card rounded-3xl shadow-lg p-10 border border-border max-w-md w-full text-center animate-scale-in">
           <div className="w-20 h-20 bg-primary/10 rounded-3xl flex items-center justify-center mx-auto mb-8">
             <Shield className="h-10 w-10 text-primary" />
           </div>
@@ -329,7 +329,7 @@ export default function ViewZap() {
               placeholder="Enter password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="input-focus text-base rounded-xl border-border/50 bg-background/50 backdrop-blur-sm h-14 px-6 font-medium text-lg"
+              className="input-focus text-base rounded-xl border-border bg-background h-14 px-6 font-medium text-lg focus-ring"
               disabled={verifying}
               autoFocus
             />
@@ -340,12 +340,12 @@ export default function ViewZap() {
             )}
             <Button
               type="submit"
-              className="w-full h-14 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground font-semibold text-lg rounded-xl transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+              className="w-full h-14 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground font-semibold text-lg rounded-xl transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 focus-ring"
               disabled={verifying || !password}
             >
               {verifying ? (
                 <>
-                  <div className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin mr-3"></div>
+                  <Loader2 className="w-5 h-5 animate-spin mr-3" />
                   Verifying...
                 </>
               ) : (
@@ -365,7 +365,7 @@ export default function ViewZap() {
     const ErrorIcon = getErrorIcon(errorType);
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-background p-6 page-enter">
-        <div className="bg-card/50 backdrop-blur-sm p-10 rounded-3xl shadow-2xl border border-border/30 max-w-md w-full text-center animate-scale-in">
+        <div className="bg-card rounded-3xl shadow-lg p-10 border border-border max-w-md w-full text-center animate-scale-in">
           <div className="w-20 h-20 bg-destructive/10 rounded-3xl flex items-center justify-center mx-auto mb-8">
             <ErrorIcon className="h-10 w-10 text-destructive" />
           </div>
@@ -375,7 +375,7 @@ export default function ViewZap() {
           <p className="text-muted-foreground mb-8 text-lg">{error}</p>
           <Button
             onClick={() => (window.location.href = "/")}
-            className="bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:scale-[1.02] h-14 px-8 text-lg"
+            className="bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:scale-[1.02] h-14 px-8 text-lg focus-ring"
           >
             <Home className="h-5 w-5 mr-3" />
             Go Home
