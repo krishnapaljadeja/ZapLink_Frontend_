@@ -109,7 +109,7 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
-            {contentTypes.map((type, index) => (
+            {contentTypes.map((type) => (
               <button
                 key={type.id}
                 onClick={() =>
