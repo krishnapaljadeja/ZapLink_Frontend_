@@ -1,53 +1,98 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  /* Dark theme (default) */
-  --background: 240 10% 3.9%;
+  /* Dark theme (default, now lighter) */
+  --background: 222 14% 12%; /* was 240 10% 3.9% */
   --foreground: 0 0% 98%;
-  --card: 240 10% 3.9%;
+  --card: 222 14% 16%; /* was 240 10% 3.9% */
   --card-foreground: 0 0% 98%;
-  --popover: 240 10% 3.9%;
+  --popover: 222 14% 16%;
   --popover-foreground: 0 0% 98%;
   --primary: 142.1 76.2% 36.3%;
   --primary-foreground: 355.7 100% 97.3%;
-  --secondary: 240 3.7% 15.9%;
+  --secondary: 222 10% 22%;
   --secondary-foreground: 0 0% 98%;
-  --muted: 240 3.7% 15.9%;
+  --muted: 222 10% 22%;
   --muted-foreground: 240 5% 64.9%;
-  --accent: 240 3.7% 15.9%;
+  --accent: 222 10% 22%;
   --accent-foreground: 0 0% 98%;
   --destructive: 0 62.8% 30.6%;
   --destructive-foreground: 0 0% 98%;
-  --border: 240 3.7% 15.9%;
-  --input: 240 3.7% 15.9%;
+  --border: 222 10% 22%;
+  --input: 222 10% 22%;
   --ring: 142.1 76.2% 36.3%;
   --radius: 0.75rem;
 }
 
 .light {
-  /* Light theme overrides */
-  --background: 0 0% 100%;
-  --foreground: 240 10% 3.9%;
+  /* Enhanced light theme */
+  --background: 210 20% 98%; /* soft light gray */
+  --foreground: 222 14% 12%;
   --card: 0 0% 100%;
-  --card-foreground: 240 10% 3.9%;
+  --card-foreground: 222 14% 12%;
   --popover: 0 0% 100%;
-  --popover-foreground: 240 10% 3.9%;
+  --popover-foreground: 222 14% 12%;
   --primary: 142.1 76.2% 36.3%;
   --primary-foreground: 355.7 100% 97.3%;
-  --secondary: 240 4.8% 95.9%;
-  --secondary-foreground: 240 5.9% 10%;
-  --muted: 240 4.8% 95.9%;
-  --muted-foreground: 240 3.8% 46.1%;
-  --accent: 240 4.8% 95.9%;
-  --accent-foreground: 240 5.9% 10%;
+  --secondary: 210 16% 92%;
+  --secondary-foreground: 222 14% 12%;
+  --muted: 210 16% 92%;
+  --muted-foreground: 222 14% 40%;
+  --accent: 210 16% 92%;
+  --accent-foreground: 222 14% 12%;
   --destructive: 0 84.2% 60.2%;
   --destructive-foreground: 0 0% 98%;
-  --border: 240 5.9% 90%;
-  --input: 240 5.9% 90%;
+  --border: 210 16% 85%;
+  --input: 210 16% 85%;
   --ring: 142.1 76.2% 36.3%;
+}
+
+/* Light mode visual polish */
+.light .glass-nav {
+  background: rgba(255, 255, 255, 0.96);
+  border-bottom: 1.5px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.04);
+}
+
+.light .card-hover,
+.light .bg-card {
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.04);
+  border: 1.5px solid rgba(0, 0, 0, 0.06);
+  background: #fff;
+  color: #1a202c;
+}
+
+.light .text-foreground {
+  color: #1a202c !important;
+}
+
+.light .input-focus:focus {
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.1), 0 2px 8px 0 rgba(0, 0, 0, 0.03);
+  border-color: #a0aec0;
+}
+
+/* Remove heavy box-shadows and blurs in light mode */
+.light .shadow-2xl,
+.light .backdrop-blur-sm,
+.light .backdrop-blur-md {
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+/* Make transitions snappier */
+button,
+.card-hover,
+.glass-nav,
+.input-focus,
+.bg-card,
+.border,
+.rounded-2xl,
+.rounded-xl {
+  transition-duration: 150ms !important;
+  will-change: transform, box-shadow;
 }
 
 * {
@@ -57,98 +102,30 @@
 body {
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-feature-settings: 'cv11', 'ss01';
-  font-variation-settings: 'opsz' 32;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
+  font-feature-settings: "cv11", "ss01";
+  font-variation-settings: "opsz" 32;
   scroll-behavior: smooth;
 }
 
-/* Page transition animations */
-@keyframes pageEnter {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+/* Removed page transition and fade-in/scale-in/slide-in animations for no flicker */
+/* .page-enter, .animate-fade-in-up, .animate-fade-in, .animate-scale-in, .animate-slide-in-left { animation: none !important; } */
 
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+/* Comment out or remove the animation classes and keyframes below: */
+/*
+@keyframes pageEnter { ... }
+@keyframes fadeInUp { ... }
+@keyframes fadeIn { ... }
+@keyframes scaleIn { ... }
+@keyframes slideInFromLeft { ... }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes scaleIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes slideInFromLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-.page-enter {
-  animation: pageEnter 0.4s ease-out;
-}
-
-.animate-fade-in-up {
-  animation: fadeInUp 0.6s ease-out;
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.4s ease-out;
-}
-
-.animate-scale-in {
-  animation: scaleIn 0.3s ease-out;
-}
-
-.animate-slide-in-left {
-  animation: slideInFromLeft 0.5s ease-out;
-}
-
-/* Glass morphism effect for navbar */
-.glass-nav {
-  background: rgba(15, 23, 42, 0.8);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.light .glass-nav {
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-}
+.page-enter { animation: none !important; }
+.animate-fade-in-up { animation: none !important; }
+.animate-fade-in { animation: none !important; }
+.animate-scale-in { animation: none !important; }
+.animate-slide-in-left { animation: none !important; }
+*/
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
@@ -170,7 +147,11 @@ body {
 
 /* Enhanced button styles */
 .btn-primary {
-  background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary)) 100%);
+  background: linear-gradient(
+    135deg,
+    hsl(var(--primary)) 0%,
+    hsl(var(--primary)) 100%
+  );
   box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
   transition: all 0.3s ease;
 }
@@ -206,7 +187,11 @@ body {
 
 /* Progress bar */
 .progress-bar {
-  background: linear-gradient(90deg, hsl(var(--primary)) 0%, hsl(var(--primary)) 100%);
+  background: linear-gradient(
+    90deg,
+    hsl(var(--primary)) 0%,
+    hsl(var(--primary)) 100%
+  );
   border-radius: 9999px;
   transition: width 0.3s ease;
 }
@@ -223,4 +208,133 @@ body {
 
 .color-picker:hover {
   transform: scale(1.1);
+}
+
+/* ZapLink modern dark background */
+.zaplink-bg {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  background: linear-gradient(120deg, #0a1020 0%, #181c2a 60%, #000 100%);
+  overflow: hidden;
+}
+
+.dark .zaplink-bg {
+  background: linear-gradient(120deg, #0a1020 0%, #181c2a 60%, #000 100%);
+}
+
+.zaplink-bg .radial-spot {
+  position: absolute;
+  pointer-events: none;
+  z-index: 2;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(
+      ellipse at 30% 0%,
+      rgba(36, 99, 235, 0.25) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse at 80% 100%,
+      rgba(124, 58, 237, 0.22) 0%,
+      transparent 70%
+    );
+}
+
+.glow-blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(120px);
+  opacity: 0.45;
+  pointer-events: none;
+  z-index: 1;
+  animation: blobMove 16s ease-in-out infinite;
+}
+
+.glow-blob.blue {
+  background: #2563eb;
+}
+.glow-blob.purple {
+  background: #7c3aed;
+}
+
+@keyframes blobMove {
+  0%,
+  100% {
+    transform: scale(1) translateY(0);
+  }
+  50% {
+    transform: scale(1.1) translateY(20px);
+  }
+}
+
+.noise-overlay {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  opacity: 0.28;
+  background-image: url("/noise.png");
+  background-repeat: repeat;
+  mix-blend-mode: soft-light;
+}
+
+/* Only show background effects in dark mode */
+.dark .radial-spot,
+.dark .glow-blob,
+.dark .noise-overlay {
+  display: block;
+}
+.light .radial-spot,
+.light .glow-blob,
+.light .noise-overlay {
+  display: none !important;
+}
+
+.radial-spot,
+.glow-blob,
+.noise-overlay {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.noise-overlay {
+  z-index: 2;
+}
+
+.zaplink-bg .relative.z-20,
+.zaplink-bg .relative.z-20 * {
+  position: relative;
+  z-index: 10;
+}
+
+.light .zaplink-bg {
+  background: #f8fafc !important;
+}
+
+.light .radial-spot,
+.light .glow-blob,
+.light .noise-overlay {
+  display: none !important;
+}
+
+.zaplink-bg {
+  background: linear-gradient(120deg, #0a1020 0%, #181c2a 60%, #000 100%);
+}
+
+.zaplink-bg,
+.bg-card,
+.glass-nav,
+.card-hover,
+body {
+  transition: background 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.transition-opacity {
+  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }

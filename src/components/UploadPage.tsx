@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, Link, useLocation } from "react-router-dom";
-import { ArrowLeft, Upload, Loader2, X, Shield, Clock, Eye, Zap } from "lucide-react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { Upload, Loader2, X, Shield, Clock, Eye, Zap } from "lucide-react";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Checkbox } from "./ui/checkbox";
@@ -46,6 +46,20 @@ const TYPE_EXTENSIONS: Record<FileType, string[]> = {
   text: [],
 };
 
+// File size limits (in bytes)
+const MAX_SIZE: Record<FileType, number> = {
+  pdf: 10 * 1024 * 1024,
+  document: 10 * 1024 * 1024,
+  presentation: 10 * 1024 * 1024,
+  audio: 10 * 1024 * 1024,
+  image: 10 * 1024 * 1024,
+  video: 100 * 1024 * 1024,
+  spreadsheet: 10 * 1024 * 1024,
+  archive: 10 * 1024 * 1024,
+  url: 0,
+  text: 0,
+};
+
 export default function UploadPage() {
   const location = useLocation();
   const initialType = (location.state?.type as FileType) || "pdf";
@@ -73,6 +87,23 @@ export default function UploadPage() {
   const [type] = useState<FileType>(initialType);
   const [urlValue, setUrlValue] = useState("");
   const [textValue, setTextValue] = useState("");
+  const [compressPdf, setCompressPdf] = useState(false);
+
+  // Reset state when QR type changes
+  useEffect(() => {
+    setQrName("");
+    setUploadedFile(null);
+    setPassword("");
+    setPasswordProtect(false);
+    setSelfDestruct(false);
+    setDestructViews(false);
+    setDestructTime(false);
+    setViewsValue("");
+    setTimeValue("");
+    setUrlValue("");
+    setTextValue("");
+    setCompressPdf(false);
+  }, [initialType]);
 
   // Persist state to sessionStorage
   useEffect(() => {
@@ -160,6 +191,17 @@ export default function UploadPage() {
       // Allow these types to proceed with file upload
     } else if (!validateFileType(file)) {
       toast.error(TYPE_MESSAGES[type] || "Invalid file type.");
+      e.target.value = "";
+      return;
+    }
+    // File size check
+    const maxSize = MAX_SIZE[type] || 10 * 1024 * 1024;
+    if (file.size > maxSize) {
+      toast.error(
+        `File too large. Max size for ${
+          type === "video" ? "video" : "this type"
+        } is ${type === "video" ? "100MB" : "10MB"}.`
+      );
       e.target.value = "";
       return;
     }
@@ -316,6 +358,13 @@ export default function UploadPage() {
       return;
     }
 
+    if (type === "pdf" && compressPdf && uploadedFile) {
+      // Simulate compression (in real app, use a PDF compression lib)
+      toast.info("Compressing PDF (simulated)...");
+      await new Promise((res) => setTimeout(res, 1200));
+      // Optionally, you could reduce the file size here if using a real compressor
+    }
+
     const formData = new FormData();
     formData.append("file", uploadedFile);
     formData.append("name", qrName);
@@ -365,27 +414,10 @@ export default function UploadPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background page-enter">
-      {/* Header */}
-      <header className="glass-nav sticky top-0 z-50">
-        <div className="container mx-auto px-4 sm:px-6 py-4 flex items-center gap-4">
-          <Link
-            to="/"
-            className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-all duration-200 hover:scale-105"
-          >
-            <ArrowLeft className="h-5 w-5" />
-            <span className="hidden sm:inline">Back</span>
-          </Link>
-          <div className="flex-1 text-center">
-            <h1 className="text-lg sm:text-2xl font-semibold bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
-              Upload Your Content
-            </h1>
-          </div>
-        </div>
-      </header>
-
+    <div className="min-h-screen">
+      {/* Remove local header/navbar, now handled globally */}
       <main className="container mx-auto px-4 sm:px-6 py-8 sm:py-12 max-w-3xl">
-        <div className="bg-card/50 backdrop-blur-sm rounded-3xl shadow-2xl p-6 sm:p-10 space-y-8 sm:space-y-10 border border-border/30 animate-fade-in-up">
+        <div className="bg-card/50 backdrop-blur-sm rounded-3xl shadow-2xl p-6 sm:p-10 space-y-8 sm:space-y-10 border border-border/30">
           {/* Step Indicator */}
           <div className="flex items-center justify-between mb-8 sm:mb-12">
             <span className="text-xs sm:text-sm text-primary font-semibold bg-primary/10 px-3 py-1 sm:px-4 sm:py-2 rounded-full">
@@ -401,7 +433,10 @@ export default function UploadPage() {
           </div>
 
           {/* QR Code Name */}
-          <div className="space-y-3 sm:space-y-4 animate-slide-in-left" style={{ animationDelay: '0.1s' }}>
+          <div
+            className="space-y-3 sm:space-y-4"
+            style={{ animationDelay: "0.1s" }}
+          >
             <Label className="text-base sm:text-lg font-semibold text-foreground flex items-center gap-2">
               <span className="w-2 h-2 sm:w-3 sm:h-3 bg-primary rounded-full"></span>
               Name your QR Code
@@ -417,8 +452,14 @@ export default function UploadPage() {
 
           {/* File Upload */}
           {type === "url" ? (
-            <div className="space-y-3 sm:space-y-4 animate-slide-in-left" style={{ animationDelay: '0.2s' }}>
-              <Label htmlFor="url" className="text-base sm:text-lg font-semibold text-foreground flex items-center gap-2">
+            <div
+              className="space-y-3 sm:space-y-4"
+              style={{ animationDelay: "0.2s" }}
+            >
+              <Label
+                htmlFor="url"
+                className="text-base sm:text-lg font-semibold text-foreground flex items-center gap-2"
+              >
                 <span className="w-2 h-2 sm:w-3 sm:h-3 bg-blue-500 rounded-full"></span>
                 Enter URL
               </Label>
@@ -435,8 +476,14 @@ export default function UploadPage() {
               </p>
             </div>
           ) : type === "text" ? (
-            <div className="space-y-3 sm:space-y-4 animate-slide-in-left" style={{ animationDelay: '0.2s' }}>
-              <Label htmlFor="text" className="text-base sm:text-lg font-semibold text-foreground flex items-center gap-2">
+            <div
+              className="space-y-3 sm:space-y-4"
+              style={{ animationDelay: "0.2s" }}
+            >
+              <Label
+                htmlFor="text"
+                className="text-base sm:text-lg font-semibold text-foreground flex items-center gap-2"
+              >
                 <span className="w-2 h-2 sm:w-3 sm:h-3 bg-yellow-500 rounded-full"></span>
                 Enter Text
               </Label>
@@ -459,9 +506,15 @@ export default function UploadPage() {
               </div>
             </div>
           ) : (
-            <div className="space-y-4 sm:space-y-6 animate-slide-in-left" style={{ animationDelay: '0.2s' }}>
+            <div
+              className="space-y-4 sm:space-y-6"
+              style={{ animationDelay: "0.2s" }}
+            >
               <div className="space-y-3 sm:space-y-4">
-                <Label htmlFor="file" className="text-base sm:text-lg font-semibold text-foreground flex items-center gap-2">
+                <Label
+                  htmlFor="file"
+                  className="text-base sm:text-lg font-semibold text-foreground flex items-center gap-2"
+                >
                   <span className="w-2 h-2 sm:w-3 sm:h-3 bg-purple-500 rounded-full"></span>
                   Upload File
                 </Label>
@@ -474,19 +527,45 @@ export default function UploadPage() {
                     className="cursor-pointer h-12 sm:h-14 rounded-xl border-border/50 bg-background/50 backdrop-blur-sm file:mr-4 file:py-2 sm:file:py-3 file:px-4 sm:file:px-6 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90 transition-all duration-200"
                   />
                 </div>
+                {/* Max file size info */}
+                <p className="text-xs text-muted-foreground pl-4 sm:pl-6">
+                  {type === "video"
+                    ? "Max file size: 100MB"
+                    : "Max file size: 10MB"}
+                </p>
                 <p className="text-sm text-muted-foreground pl-4 sm:pl-6">
                   {TYPE_MESSAGES[type]}
                 </p>
+                {/* PDF Compression Option */}
+                {type === "pdf" && (
+                  <div className="flex items-center gap-2 pl-4 sm:pl-6">
+                    <input
+                      type="checkbox"
+                      id="compress-pdf"
+                      checked={compressPdf}
+                      onChange={(e) => setCompressPdf(e.target.checked)}
+                      className="accent-primary h-4 w-4 rounded"
+                    />
+                    <label
+                      htmlFor="compress-pdf"
+                      className="text-sm text-foreground cursor-pointer"
+                    >
+                      Compress PDF before uploading
+                    </label>
+                  </div>
+                )}
               </div>
 
               {uploadedFile && (
-                <div className="p-4 sm:p-6 border border-border/50 rounded-xl bg-card/30 backdrop-blur-sm animate-scale-in">
+                <div className="p-4 sm:p-6 border border-border/50 rounded-xl bg-card/30 backdrop-blur-sm">
                   <div className="flex items-center gap-3 sm:gap-4">
                     <div className="p-2 sm:p-3 bg-primary/10 rounded-xl">
                       <Upload className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
                     </div>
                     <div className="flex-1">
-                      <p className="font-semibold text-foreground text-base sm:text-lg">{uploadedFile.name}</p>
+                      <p className="font-semibold text-foreground text-base sm:text-lg">
+                        {uploadedFile.name}
+                      </p>
                       <p className="text-sm text-muted-foreground">
                         {(uploadedFile.size / 1024).toFixed(2)} KB
                       </p>
@@ -505,12 +584,15 @@ export default function UploadPage() {
           )}
 
           {/* Security Options */}
-          <div className="space-y-6 sm:space-y-8 animate-slide-in-left" style={{ animationDelay: '0.3s' }}>
+          <div
+            className="space-y-6 sm:space-y-8"
+            style={{ animationDelay: "0.3s" }}
+          >
             <h3 className="text-xl sm:text-2xl font-semibold text-foreground flex items-center gap-2 sm:gap-3">
               <Shield className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
               Security Options
             </h3>
-            
+
             <div className="space-y-4 sm:space-y-6">
               <div className="flex items-center space-x-3 sm:space-x-4 p-4 sm:p-6 rounded-xl bg-card/30 border border-border/30 hover:border-primary/30 transition-all duration-200">
                 <Checkbox
@@ -529,7 +611,7 @@ export default function UploadPage() {
               </div>
 
               {passwordProtect && (
-                <div className="pl-6 sm:pl-10 animate-scale-in">
+                <div className="pl-6 sm:pl-10">
                   <Input
                     type="password"
                     placeholder="Enter a secure password..."
@@ -557,7 +639,7 @@ export default function UploadPage() {
               </div>
 
               {selfDestruct && (
-                <div className="pl-6 sm:pl-10 space-y-4 sm:space-y-6 animate-scale-in">
+                <div className="pl-6 sm:pl-10 space-y-4 sm:space-y-6">
                   <div className="flex items-center space-x-3 sm:space-x-4 p-3 sm:p-4 rounded-xl bg-card/20 border border-border/20">
                     <Checkbox
                       id="destruct-views"
@@ -577,7 +659,7 @@ export default function UploadPage() {
                   </div>
 
                   {destructViews && (
-                    <div className="pl-6 sm:pl-8 animate-scale-in">
+                    <div className="pl-6 sm:pl-8">
                       <Input
                         type="number"
                         placeholder="Number of views"
@@ -607,7 +689,7 @@ export default function UploadPage() {
                   </div>
 
                   {destructTime && (
-                    <div className="pl-6 sm:pl-8 animate-scale-in">
+                    <div className="pl-6 sm:pl-8">
                       <Input
                         type="number"
                         placeholder="Hours until expiration"
@@ -623,7 +705,7 @@ export default function UploadPage() {
           </div>
 
           {/* Generate Button */}
-          <div className="pt-6 sm:pt-8 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+          <div className="pt-6 sm:pt-8" style={{ animationDelay: "0.4s" }}>
             <Button
               onClick={handleGenerateAndContinue}
               disabled={!canGenerate || loading}

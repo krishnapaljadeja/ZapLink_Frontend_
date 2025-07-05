@@ -1,6 +1,15 @@
 import React, { useState, useRef } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { ArrowLeft, Upload, Download, Copy, Share2, X, Palette, Sparkles } from "lucide-react";
+import { useLocation, useNavigate } from "react-router-dom";
+import {
+  ArrowLeft,
+  Upload,
+  Download,
+  Copy,
+  Share2,
+  X,
+  Palette,
+  Sparkles,
+} from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import { Button } from "./ui/button";
 import {
@@ -31,6 +40,7 @@ type CustomizePageState = {
 
 export default function CustomizePage() {
   const location = useLocation();
+  const navigate = useNavigate();
   const state = (location.state as CustomizePageState) || null;
   const qrRef = useRef<HTMLDivElement>(null);
 
@@ -78,7 +88,8 @@ export default function CustomizePage() {
       case "gradient":
         return {
           padding: 24,
-          background: "linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary)) 100%)",
+          background:
+            "linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary)) 100%)",
           borderRadius: 20,
           boxShadow: "0 8px 32px rgba(34, 197, 94, 0.3)",
         };
@@ -144,28 +155,30 @@ export default function CustomizePage() {
     }
   };
 
+  // Back button handler
+  const handleBack = () => {
+    if (state?.type) {
+      navigate("/upload", { state: { type: state.type.toLowerCase() } });
+    } else {
+      navigate("/upload");
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-background page-enter">
-      {/* Header */}
-      <header className="glass-nav sticky top-0 z-50">
-        <div className="container mx-auto px-4 sm:px-6 py-4 flex items-center gap-4">
-          <Link
-            to="/upload"
-            className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-all duration-200 hover:scale-105"
+    <div className="min-h-screen">
+      <main className="container mx-auto px-4 sm:px-6 py-8 sm:py-12 max-w-3xl">
+        {/* Back Button */}
+        <div className="mb-6">
+          <Button
+            variant="ghost"
+            onClick={handleBack}
+            className="flex items-center gap-2"
           >
             <ArrowLeft className="h-5 w-5" />
-            <span className="hidden sm:inline">Back</span>
-          </Link>
-          <div className="flex-1 text-center">
-            <h1 className="text-lg sm:text-2xl font-semibold bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
-              Customize Your QR Code
-            </h1>
-          </div>
+            Back
+          </Button>
         </div>
-      </header>
-
-      <main className="container mx-auto px-4 sm:px-6 py-8 sm:py-12 max-w-6xl">
-        <div className="bg-card/50 backdrop-blur-sm rounded-3xl shadow-2xl p-6 sm:p-8 space-y-8 border border-border/30 animate-fade-in-up">
+        <div className="bg-card/50 backdrop-blur-sm rounded-3xl shadow-2xl p-6 sm:p-8 space-y-8 border border-border/30">
           {/* Step Indicator */}
           <div className="flex items-center justify-between mb-8">
             <span className="text-xs sm:text-sm text-primary font-semibold bg-primary/10 px-3 py-1 rounded-full">
@@ -183,7 +196,7 @@ export default function CustomizePage() {
           {/* Two-column layout: Preview on left, Controls on right */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
             {/* QR Preview Card */}
-            <div className="flex flex-col items-center justify-center animate-scale-in order-2 lg:order-1">
+            <div className="flex flex-col items-center justify-center order-2 lg:order-1">
               <div className="bg-gradient-to-br from-card to-card/50 p-6 sm:p-8 rounded-3xl border border-border/50 shadow-2xl backdrop-blur-sm">
                 <div
                   ref={qrRef}
@@ -211,12 +224,14 @@ export default function CustomizePage() {
             </div>
 
             {/* Customization Controls */}
-            <div className="space-y-6 animate-slide-in-left order-1 lg:order-2" style={{ animationDelay: '0.2s' }}>
+            <div className="space-y-6 order-1 lg:order-2">
               <div className="flex items-center gap-3 mb-6">
                 <div className="p-2 bg-primary/10 rounded-lg">
                   <Palette className="h-5 w-5 text-primary" />
                 </div>
-                <h2 className="text-xl sm:text-2xl font-bold text-foreground">Design Options</h2>
+                <h2 className="text-xl sm:text-2xl font-bold text-foreground">
+                  Design Options
+                </h2>
               </div>
 
               {/* Frame Style Selector */}
@@ -241,12 +256,24 @@ export default function CustomizePage() {
                     <SelectValue placeholder="Select a frame style" />
                   </SelectTrigger>
                   <SelectContent className="rounded-xl border border-border/50 bg-card/90 backdrop-blur-sm text-foreground shadow-2xl">
-                    <SelectItem value="none" className="rounded-lg">None</SelectItem>
-                    <SelectItem value="rounded" className="rounded-lg">Rounded Corners</SelectItem>
-                    <SelectItem value="circle" className="rounded-lg">Circle</SelectItem>
-                    <SelectItem value="shadow" className="rounded-lg">Shadow</SelectItem>
-                    <SelectItem value="gradient" className="rounded-lg">Gradient</SelectItem>
-                    <SelectItem value="border" className="rounded-lg">Accent Border</SelectItem>
+                    <SelectItem value="none" className="rounded-lg">
+                      None
+                    </SelectItem>
+                    <SelectItem value="rounded" className="rounded-lg">
+                      Rounded Corners
+                    </SelectItem>
+                    <SelectItem value="circle" className="rounded-lg">
+                      Circle
+                    </SelectItem>
+                    <SelectItem value="shadow" className="rounded-lg">
+                      Shadow
+                    </SelectItem>
+                    <SelectItem value="gradient" className="rounded-lg">
+                      Gradient
+                    </SelectItem>
+                    <SelectItem value="border" className="rounded-lg">
+                      Accent Border
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -279,7 +306,9 @@ export default function CustomizePage() {
                         alt="Logo Preview"
                         className="h-12 w-12 sm:h-16 sm:w-16 object-contain rounded-lg"
                       />
-                      <span className="text-foreground font-medium">Logo uploaded</span>
+                      <span className="text-foreground font-medium">
+                        Logo uploaded
+                      </span>
                       <Button
                         type="button"
                         variant="ghost"
@@ -317,7 +346,9 @@ export default function CustomizePage() {
                   <div className="p-2 bg-green-500/10 rounded-lg">
                     <Sparkles className="h-5 w-5 text-green-500" />
                   </div>
-                  <h2 className="text-lg sm:text-xl font-bold text-foreground">Actions</h2>
+                  <h2 className="text-lg sm:text-xl font-bold text-foreground">
+                    Actions
+                  </h2>
                 </div>
                 <div className="grid grid-cols-1 gap-4">
                   <Button
